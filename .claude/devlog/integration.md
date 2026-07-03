@@ -5,6 +5,13 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — UI art do HUD (Fase 5 · Arte)
+- HUD de texto → **arte pixel**: painel (NinePatchRect), ícone de jerry can + `TextureProgressBar` de combustível, ícone de relógio + tempo, botão REINICIAR estilizado (StyleBoxTexture normal/pressed).
+- Assets novos em `assets/ui/` (panel, fuel_icon, clock_icon, gauge_frame/fill, button_normal/pressed) gerados por `assets/ui/generate_ui_art.py` (pixel art procedural, reproduzível, paleta única espaço-retrô).
+- `ui.gd`: barra usa `fuel_changed` (max/value) + label numérico; **tint vermelho** quando combustível ≤ 25%.
+- Sem mudança de contrato (só escuta `fuel_changed`/`time_changed`/`game_over`). Validado renderizando o viewport (janela do jogo abre fora da tela no macOS; screenshot direto não pega).
+- TODO: menu inicial (Fase 7) reutiliza o mesmo botão; indicador de inclinação no HUD; áudio/música (Fase 5 restante).
+
 ## 2026-07-03 — Chão sólido + fase maior
 - Adicionado `Ground` (StaticBody2D + WorldBoundaryShape2D) em main.tscn, y=974 → foguete não passa do chão, começa pousado.
 - Fase maior: `moon_altitude_offset` -5000→-10000; `time_limit` 120→180s.

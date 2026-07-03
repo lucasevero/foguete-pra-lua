@@ -1,10 +1,15 @@
 extends CanvasLayer
-## DONO: Dev D — HUD. Só escuta signals. process_mode=ALWAYS (funciona na pausa).
+## DONO: Dev D — HUD (arte pixel). Só escuta signals. process_mode=ALWAYS (funciona na pausa).
 
-@onready var fuel_label: Label = $FuelLabel
-@onready var time_label: Label = $TimeLabel
+@onready var fuel_bar: TextureProgressBar = $HudPanel/FuelBar
+@onready var fuel_value: Label = $HudPanel/FuelValue
+@onready var time_label: Label = $HudPanel/TimeLabel
 @onready var result_label: Label = $ResultLabel
 @onready var restart_button: Button = $RestartButton
+
+const FUEL_OK := Color(1, 1, 1, 1)             # âmbar original do sprite
+const FUEL_LOW := Color(1.0, 0.45, 0.35, 1)    # tingido de vermelho quando acabando
+const LOW_RATIO := 0.25
 
 func _ready() -> void:
 	result_label.hide()
@@ -15,7 +20,12 @@ func _ready() -> void:
 	GameEvents.game_over.connect(_on_game_over)
 
 func _on_fuel_changed(current: float, maximum: float) -> void:
-	fuel_label.text = "Combustível: %d / %d" % [current, maximum]
+	fuel_bar.max_value = maximum
+	fuel_bar.value = current
+	fuel_value.text = "%d / %d" % [current, maximum]
+	# alerta visual quando o combustível está acabando
+	var low := maximum > 0.0 and current / maximum <= LOW_RATIO
+	fuel_bar.tint_progress = FUEL_LOW if low else FUEL_OK
 
 func _on_time_changed(seconds_left: float) -> void:
 	time_label.text = "Tempo: %.1f" % seconds_left
