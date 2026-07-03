@@ -19,5 +19,6 @@ func _on_time_changed(seconds_left: float) -> void:
 
 func _on_game_over(won: bool) -> void:
 	# TODO(Dev D): tela real de vitória/derrota + botão reiniciar
-	result_label.text = "VITÓRIA! ...mas nosso foguete também não volta." if won else "GAME OVER"
+	var msg := "VITÓRIA! ...mas nosso foguete também não volta." if won else "GAME OVER"
+	result_label.text = msg + "\n(R para reiniciar)"
 	result_label.show()

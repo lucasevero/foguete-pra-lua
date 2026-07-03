@@ -1,6 +1,6 @@
 # Foguete pra Lua 🚀 — contexto do projeto
 
-Jogo Godot 4.7, 2D, pixel art, **desktop**. Fase única: o foguete sai da Terra e
+Jogo Godot 4.7, 2D, pixel art, **mobile (portrait 720×1280, controle por toque)**. Fase única: o foguete sai da Terra e
 sobe até a Lua para resgatar o Carlos e o Gus (que vibecodaram um foguete, chegaram
 lá e não conseguem voltar). O jogador gerencia **combustível** e **tempo**, desvia de
 **asteroides** e equilibra o foguete (gravidade puxa, empuxo compensa, ele tomba pros lados).
@@ -57,8 +57,8 @@ Fonte da verdade: `game_events.gd`. Resumo em `CONTRACT.md`.
 
 ## Controles (protótipo)
 
-- **ESPAÇO** = empuxo (gasta combustível)
-- **A / D** ou **setas** = girar
+- **Toque/clique (segurar)** = empuxo: empurra o foguete pra longe do ponto tocado (embaixo → sobe; lateral → gira). Mouse simula toque no desktop.
+- **R** = reiniciar (na tela de game over/vitória)
 
 ## Rodar / Verificar
 

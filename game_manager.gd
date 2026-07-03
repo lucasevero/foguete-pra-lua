@@ -23,6 +23,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if not running:
+		if Input.is_key_pressed(KEY_R):        # reiniciar após game over / vitória
+			get_tree().reload_current_scene()
 		return
 	time_left -= delta
 	GameEvents.time_changed.emit(time_left)

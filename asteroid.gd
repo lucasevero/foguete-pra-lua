@@ -9,7 +9,9 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	# TODO(Dev B): padrão de movimento (deriva lateral, rotação, tamanhos variados)
 	position.y += fall_speed * delta
-	if position.y > 800.0:
+	# despawn ao sair por baixo da tela (posição na tela, não y do mundo)
+	var screen_y := get_global_transform_with_canvas().origin.y
+	if screen_y > get_viewport().get_visible_rect().size.y + 100.0:
 		queue_free()
 
 func _on_body_entered(body: Node) -> void:

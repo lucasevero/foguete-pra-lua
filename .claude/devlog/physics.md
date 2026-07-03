@@ -5,6 +5,13 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Fase 2: controle mobile por toque + física
+- Controle trocado de teclado p/ **toque/mouse** (polling de `Input.is_mouse_button_pressed` + `get_mouse_position`, robusto e funciona no mobile via emulação). Empurra o foguete pra LONGE do ponto tocado; lateral rotaciona.
+- Física: `gravity` 500→200; modelo trocado de pêndulo invertido p/ **auto-endireitamento** (`-sin(rot)*uprighting`, suave); `touch_torque` gira devagar.
+- **Morte ao sair da tela**: `VisibleOnScreenNotifier2D` → emite `player_died`.
+- Camera2D limites p/ largura mobile 720.
+- TODO: tuning fino de feel; sprite pixel art.
+
 ## 2026-07-03 — esqueleto inicial
 - `player.gd`: gravidade + empuxo (ESPAÇO) na direção do foguete + rotação (A/D). Combustível decrementa ao empurrar.
 - Escuta `fuel_collected`, `asteroid_hit`. Emite `fuel_changed`, `player_died`.
