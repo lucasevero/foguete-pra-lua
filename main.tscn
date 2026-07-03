@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="PackedScene" path="res://parallax_bg.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://player.tscn" id="2"]
@@ -9,9 +9,17 @@
 [ext_resource type="PackedScene" path="res://ui.tscn" id="7"]
 [ext_resource type="Script" path="res://game_manager.gd" id="8"]
 
+[sub_resource type="WorldBoundaryShape2D" id="floor"]
+
 [node name="Main" type="Node2D"]
 
 [node name="Background" parent="." instance=ExtResource("1")]
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 974)
+
+[node name="GroundCollision" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("floor")
 
 [node name="Player" parent="." instance=ExtResource("2")]
 position = Vector2(360, 950)

@@ -18,7 +18,7 @@ extends CharacterBody2D
 @export var angular_drag: float = 2.0       # amortece rotação
 @export var linear_drag: float = 0.4        # arrasto lateral
 @export var max_fuel: float = 100.0
-@export var fuel_burn_rate: float = 25.0    # combustível/s enquanto empurra
+@export var fuel_burn_rate: float = 10.0    # combustível/s enquanto empurra
 
 var fuel: float
 var angular_velocity: float = 0.0
@@ -58,6 +58,10 @@ func _physics_process(delta: float) -> void:
 	velocity.x -= velocity.x * linear_drag * delta
 
 	move_and_slide()
+
+	# no chão: não deixa a gravidade acumular (senão o empuxo não levanta)
+	if is_on_floor() and velocity.y > 0.0:
+		velocity.y = 0.0
 
 func _on_fuel_collected(amount: float) -> void:
 	fuel = minf(max_fuel, fuel + amount)

@@ -11,8 +11,8 @@ extends Node2D
 
 @export var earth_sky: Color = Color(0.53, 0.81, 0.92)
 @export var deep_space: Color = Color(0.02, 0.02, 0.08)
-@export var ground_y: float = 1120.0   # chão/cidade no início (casar com player start ~950)
-@export var moon_y: float = -4050.0    # deve casar com moon de game_manager
+@export var ground_y: float = 950.0    # chão/cidade no início (casar com player start ~950)
+@export var moon_y: float = -9050.0    # deve casar com moon de game_manager (start 950 + offset -10000)
 
 @onready var sky_rect: ColorRect = $SkyLayer/SkyRect
 @onready var stars: Parallax2D = $Stars

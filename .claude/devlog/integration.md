@@ -5,6 +5,11 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Chão sólido + fase maior
+- Adicionado `Ground` (StaticBody2D + WorldBoundaryShape2D) em main.tscn, y=974 → foguete não passa do chão, começa pousado.
+- Fase maior: `moon_altitude_offset` -5000→-10000; `time_limit` 120→180s.
+- Coords que precisam casar entre áreas: player start y=950, chão 974, moon world ≈ -9050 (game_manager offset + start); bg usa `ground_y`/`moon_y` iguais.
+
 ## 2026-07-03 — Tela de game over + fix de crash + config projeto
 - Game over agora **congela** o jogo (`get_tree().paused = true`) e mostra **botão REINICIAR** (mobile não tem tecla). UI com `process_mode = ALWAYS` p/ o botão funcionar na pausa. Tecla R removida.
 - ⚠️ BUG CORRIGIDO: `ui.tscn` tinha `parent=""` no nó raiz → cena corrompida derrubava o EDITOR ao renderizar (headless não pega isso!). Regra nova: validar `.tscn` abrindo o editor, não só headless.

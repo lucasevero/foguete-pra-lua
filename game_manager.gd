@@ -2,8 +2,8 @@ extends Node
 ## DONO: Dev D — orquestra o jogo. Único que conhece o "todo".
 ## Calcula altitude (Terra->Lua), tempo, e decide vitória/derrota.
 
-@export var moon_altitude_offset: float = -5000.0  # sobe = y negativo. Lua fica X px acima do início
-@export var time_limit: float = 120.0
+@export var moon_altitude_offset: float = -10000.0  # sobe = y negativo. Lua fica X px acima do início
+@export var time_limit: float = 180.0
 
 var player: Node2D
 var start_y: float = 0.0

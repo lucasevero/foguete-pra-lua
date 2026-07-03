@@ -5,6 +5,10 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Começa pousado + gasolina mais lenta
+- `fuel_burn_rate` 25→10 (era ~4s de empuxo total, agora ~10s + pickups).
+- Foguete começa pousado no chão (StaticBody em main.tscn, y=974). Zero `velocity.y` quando `is_on_floor()` — senão a gravidade acumulava e o empuxo não levantava.
+
 ## 2026-07-03 — Fase 2: controle mobile por toque + física
 - Controle trocado de teclado p/ **toque/mouse** (polling de `Input.is_mouse_button_pressed` + `get_mouse_position`, robusto e funciona no mobile via emulação). Empurra o foguete pra LONGE do ponto tocado; lateral rotaciona.
 - Física: `gravity` 500→200; modelo trocado de pêndulo invertido p/ **auto-endireitamento** (`-sin(rot)*uprighting`, suave); `touch_torque` gira devagar.
