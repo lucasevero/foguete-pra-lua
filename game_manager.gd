@@ -8,6 +8,7 @@ extends Node
 @export var time_extra_powerup: float = 15.0        # +tempo do powerup
 
 const PRICES := {"time": 5, "shield": 10, "fuel": 15, "weapon": 25}
+const CUTSCENE := preload("res://cutscene_player.tscn")
 
 ## Pertence à CLASSE (não à instância), então SOBREVIVE ao reload_current_scene():
 ## no 1º boot mostra o menu; depois do REINICIAR já entra jogando (replay instantâneo).
@@ -34,11 +35,25 @@ func _ready() -> void:
 	running = false
 	get_tree().paused = true            # congela tudo; a UI mostra o menu por cima
 	if _has_started_once:
-		_begin()                        # REINICIAR: pula o menu e joga de novo na hora
+		_play_cutscene()                # REINICIAR: cutscene e, ao terminar, joga
 
 func _on_start_requested() -> void:    # Menu "JOGAR"
 	_has_started_once = true
-	_begin()
+	_play_cutscene()
+
+func _play_cutscene() -> void:
+	# JOGAR (do menu) e REINICIAR tocam a cutscene por cima, com a árvore pausada;
+	# ao terminar (ou pular), _begin() despausa e começa a partida.
+	GameEvents.cutscene_started.emit()          # UI esconde o menu/HUD enquanto toca
+	var cs: CutscenePlayer = CUTSCENE.instantiate()
+	cs.layer = 100                              # por cima do menu/HUD/loja
+	cs.process_mode = Node.PROCESS_MODE_ALWAYS  # roda mesmo com a árvore pausada
+	add_child(cs)
+	cs.finished.connect(func() -> void:
+		cs.queue_free()
+		_begin()
+	, CONNECT_ONE_SHOT)
+	cs.play(CutsceneIntro.build())
 
 func _on_menu_requested() -> void:     # Game over "MENU": volta pro menu inicial
 	_has_started_once = false           # zera pra NÃO fazer replay instantâneo no reload

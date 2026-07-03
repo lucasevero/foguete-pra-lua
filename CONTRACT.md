@@ -47,6 +47,7 @@ Ver `game_events.gd`. **Não mude assinatura sem avisar** — quebra todo mundo.
 | `game_over(won)` | GameManager | HUD |
 | `start_requested` | UI (menu "JOGAR") | GameManager |
 | `menu_requested` | UI (game over "MENU") | GameManager + AudioManager |
+| `cutscene_started` | GameManager | UI (esconde menu/HUD durante a cutscene) |
 
 ## Controles (protótipo)
 

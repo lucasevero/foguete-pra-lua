@@ -35,3 +35,4 @@ signal game_over(won: bool)                           # HUD escuta (true = vence
 # --- UI -> fluxo de jogo ---
 signal start_requested                                # Menu "JOGAR": pede pro GameManager iniciar a partida
 signal menu_requested                                 # Game over "MENU": volta pro menu inicial (GM recarrega; AudioManager para a música)
+signal cutscene_started                               # GameManager vai tocar a cutscene → UI esconde menu/HUD enquanto toca

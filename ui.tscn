@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://ui.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dkmcwbsdd007" path="res://assets/ui/panel.png" id="2"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://m13t25xsy1jk" path="res://assets/ui/button_normal.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://d0hcoyg8xhs2r" path="res://assets/ui/button_pressed.png" id="8"]
 [ext_resource type="Texture2D" uid="uid://brikl7an3jm8g" path="res://assets/ui/tilt_arrow.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://cas4o7velx10o" path="res://assets/ui/coin_icon.png" id="10"]
 
 [sub_resource type="StyleBoxTexture" id="btn_normal"]
 texture = ExtResource("7")
@@ -33,7 +34,7 @@ visible = false
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 400.0
-offset_bottom = 150.0
+offset_bottom = 196.0
 texture = ExtResource("2")
 patch_margin_left = 8
 patch_margin_top = 8
@@ -74,21 +75,39 @@ text = "100 / 100"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="CoinIcon" type="TextureRect" parent="HudPanel"]
+offset_left = 14.0
+offset_top = 66.0
+offset_right = 62.0
+offset_bottom = 114.0
+texture = ExtResource("10")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CoinLabel" type="Label" parent="HudPanel"]
+offset_left = 72.0
+offset_top = 70.0
+offset_right = 372.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 26
+text = "0"
+vertical_alignment = 1
+
 [node name="ClockIcon" type="TextureRect" parent="HudPanel"]
 offset_left = 14.0
-offset_top = 74.0
+offset_top = 120.0
 offset_right = 62.0
-offset_bottom = 122.0
+offset_bottom = 168.0
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="TimeLabel" type="Label" parent="HudPanel"]
 offset_left = 72.0
-offset_top = 82.0
+offset_top = 124.0
 offset_right = 372.0
-offset_bottom = 118.0
-theme_override_font_sizes/font_size = 28
+offset_bottom = 164.0
+theme_override_font_sizes/font_size = 26
 text = "Tempo: --"
 vertical_alignment = 1
 

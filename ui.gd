@@ -5,6 +5,7 @@ extends CanvasLayer
 @onready var hud_panel: NinePatchRect = $HudPanel
 @onready var fuel_bar: TextureProgressBar = $HudPanel/FuelBar
 @onready var fuel_value: Label = $HudPanel/FuelValue
+@onready var coin_label: Label = $HudPanel/CoinLabel
 @onready var time_label: Label = $HudPanel/TimeLabel
 @onready var tilt_panel: NinePatchRect = $TiltPanel
 @onready var tilt_arrow: TextureRect = $TiltPanel/TiltArrow
@@ -45,14 +46,17 @@ func _ready() -> void:
 	menu_button.pressed.connect(_on_menu_button_pressed)
 
 	GameEvents.game_started.connect(_on_game_started)
+	GameEvents.cutscene_started.connect(_on_cutscene_started)
 	GameEvents.fuel_changed.connect(_on_fuel_changed)
+	GameEvents.coins_changed.connect(_on_coins_changed)
 	GameEvents.time_changed.connect(_on_time_changed)
 	GameEvents.tilt_changed.connect(_on_tilt_changed)
 	GameEvents.game_over.connect(_on_game_over)
 
 # --- Menu ---
 func _on_jogar_pressed() -> void:
-	GameEvents.start_requested.emit()   # GameManager começa a partida
+	AudioManager.play_ui_click()
+	GameEvents.start_requested.emit()   # GameManager toca a cutscene e começa a partida
 
 func _on_creditos_pressed() -> void:
 	menu_panel.hide()
@@ -73,6 +77,16 @@ func _on_game_started() -> void:
 	hud_panel.show()
 	tilt_panel.show()
 
+func _on_cutscene_started() -> void:
+	# a cutscene cobre a tela; esconde tudo até o jogo começar
+	menu_layer.hide()
+	credits_panel.hide()
+	result_label.hide()
+	restart_button.hide()
+	menu_button.hide()
+	hud_panel.hide()
+	tilt_panel.hide()
+
 # --- HUD ---
 func _on_fuel_changed(current: float, maximum: float) -> void:
 	fuel_bar.max_value = maximum
@@ -80,6 +94,9 @@ func _on_fuel_changed(current: float, maximum: float) -> void:
 	fuel_value.text = "%d / %d" % [current, maximum]
 	var low := maximum > 0.0 and current / maximum <= LOW_RATIO
 	fuel_bar.tint_progress = FUEL_LOW if low else FUEL_OK
+
+func _on_coins_changed(total: int) -> void:
+	coin_label.text = "%d" % total
 
 func _on_time_changed(seconds_left: float) -> void:
 	time_label.text = "Tempo: %.1f" % seconds_left

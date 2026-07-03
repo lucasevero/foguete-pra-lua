@@ -5,7 +5,6 @@ extends CanvasLayer
 
 const PRICES := {"time": 5, "shield": 10, "fuel": 15, "weapon": 25}
 
-@onready var coin_label: Label = $CoinLabel
 @onready var shop_button: Button = $ShopButton
 @onready var panel: Panel = $Panel
 @onready var balance: Label = $Panel/VBox/Balance
@@ -19,6 +18,7 @@ var _coins: int = 0
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	panel.hide()
+	shop_button.hide()                        # escondido no menu; aparece só quando o jogo começa
 	shop_button.pressed.connect(_open)
 	$Panel/VBox/Close.pressed.connect(_close)
 	buy_time.pressed.connect(_buy.bind("time"))
@@ -26,11 +26,11 @@ func _ready() -> void:
 	buy_fuel.pressed.connect(_buy.bind("fuel"))
 	buy_weapon.pressed.connect(_buy.bind("weapon"))
 	GameEvents.coins_changed.connect(_on_coins_changed)
+	GameEvents.game_started.connect(func(): shop_button.show())   # aparece quando começa a partida
 	GameEvents.game_over.connect(func(_w): shop_button.hide(); _close())
 
 func _on_coins_changed(total: int) -> void:
-	_coins = total
-	coin_label.text = "Moedas: %d" % total
+	_coins = total   # contador agora fica no HUD (ui.tscn); aqui só atualiza o saldo do painel
 	_refresh()
 
 func _open() -> void:

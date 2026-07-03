@@ -212,10 +212,38 @@ def tilt_arrow():
     return im
 
 
+# --------------------------------------------------------------------------
+# Ícone de moeda (16x16) — disco dourado com contorno e brilho. HUD.
+# --------------------------------------------------------------------------
+def coin_icon():
+    im = new(16, 16)
+    GOLD = (255, 199, 46, 255)
+    GOLD_D = (198, 132, 20, 255)
+    GOLD_L = (255, 236, 150, 255)
+    cx, cy, r = 8, 8, 6
+    for y in range(16):
+        for x in range(16):
+            d2 = (x - cx) ** 2 + (y - cy) ** 2
+            if d2 <= r * r:
+                px(im, x, y, GOLD)
+            if r * r - r < d2 <= r * r:                 # borda dourada escura
+                px(im, x, y, GOLD_D)
+            if d2 <= (r - 1) ** 2 and (x + y) <= 11:    # brilho canto sup-esq
+                px(im, x, y, GOLD_L)
+    # contorno (ink) só na volta do disco
+    for y in range(16):
+        for x in range(16):
+            d2 = (x - cx) ** 2 + (y - cy) ** 2
+            if r * r < d2 <= r * r + r + 3:
+                px(im, x, y, INK)
+    return im
+
+
 if __name__ == "__main__":
     save(fuel_icon(), "fuel_icon.png")
     save(clock_icon(), "clock_icon.png")
     save(tilt_arrow(), "tilt_arrow.png")
+    save(coin_icon(), "coin_icon.png")
     save(panel(), "panel.png")
     save(gauge_frame(), "gauge_frame.png")
     save(gauge_fill(), "gauge_fill.png")

@@ -8,6 +8,14 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 ## 2026-07-03 — Fix: áudio continuava tocando em background
 - `audio_manager.gd` `_notification`: muta o bus master em NOTIFICATION_APPLICATION_PAUSED / WM_WINDOW_FOCUS_OUT (app em background / tela off / perde foco), desmuta em RESUMED / FOCUS_IN. Resolve música tocando fora do app (web/mobile).
 
+## 2026-07-03 — Fluxo menu→cutscene→jogo + moedas no HUD + loja fora do menu
+- ⚠️ CONTRATO: +1 signal `cutscene_started` (GameManager → UI: esconde menu/HUD enquanto a cutscene toca). **Avisem o time (git pull).**
+- ⚠️ `project.godot`: `run/main_scene` = `main.tscn` (era `intro.tscn`). Agora **o boot mostra o menu**; a cutscene deixou de ser a cena inicial. `intro.tscn`/`intro.gd` ficaram órfãos (mantidos, sem uso).
+- **Cutscene no JOGAR/REINICIAR**: `game_manager.gd` instancia a `CutscenePlayer` inline (`layer=100`, `process_mode=ALWAYS`, toca com a árvore pausada) e no `finished` → `_begin()`. JOGAR = do menu (estado limpo); REINICIAR = reload reseta e o `_ready` (flag=true) toca a cutscene.
+- **Moedas no HUD** (`ui.tscn`/`ui.gd`): contador (novo `coin_icon.png` + label) entre a barra de combustível e o tempo, escuta `coins_changed`. Removido o contador da loja (`shop.tscn`/`shop.gd`).
+- **Botão LOJA** (`shop.gd`): escondido no menu (por padrão) e no game over (já era), aparece só em `game_started`.
+- Validado (headless + captura): BOOT=menu (loja/HUD escondidos), JOGAR→cutscene (menu some), pular→jogo (HUD+loja+moedas), coin_collected→contador atualiza, game over→loja some + REINICIAR/MENU PRINCIPAL.
+
 ## 2026-07-03 — Som de moeda (normal/grande)
 - AudioManager conecta `coin_collected(amount)`: coin.wav (normal) / coin_big.wav (amount>=5). Sons 8-bit gerados.
 
