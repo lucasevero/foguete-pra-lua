@@ -120,17 +120,21 @@ func _show_call(beat: CutsceneBeat) -> void:
 
 func _show_dialogue(beat: CutsceneBeat) -> void:
 	# Cross-cut: ambiente + personagem grande no rodapé + fala no topo.
+	# Beats de "ação"/wide-shot (sem retrato/nome) mostram só a cena + o texto.
 	_scene.visible = true
 	_caption.visible = false
 	_top_panel.visible = true
 	_location.visible = false
-	_speaker.visible = true
+	_speaker.visible = not beat.speaker.is_empty()
 	_speaker.text = beat.speaker
 	_subtitle.visible = true
-	_avatar.visible = true
 	_answer_button.visible = false
 	_skip_button.visible = true
-	_set_avatar(beat)
+	if beat.portrait != null:
+		_avatar.visible = true
+		_set_avatar(beat)
+	else:
+		_avatar.visible = false
 	_start_typing(beat.text)
 
 func _show_caption(beat: CutsceneBeat) -> void:
