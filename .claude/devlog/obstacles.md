@@ -5,6 +5,10 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Meteoros: MUITOS (leva/burst por vez)
+- A pedido do humano ("muitos meteoros"): `asteroid_spawner` agora spawna uma **leva** por tick (`batch_base`=3 no começo → +`batch_extra`=3 no auge = 6 por vez), com `base_interval` 0.45→0.3 e `min_interval` 0.2→0.15.
+- Taxa medida: **~9-10 meteoros/s** logo que o céu escurece; ~40/s no auge (60s depois). Tudo `@export` — se pesar/perf, baixar `batch_*` ou subir os intervalos.
+
 ## 2026-07-03 — Meteoros: bastante + todos os tamanhos ao escurecer
 - (ajuste pela integração a pedido do humano: "poucos" → "bastante de todos os tamanhos".)
 - `asteroid_spawner.gd`: `base_interval` 2.2→0.45s (~2.2/s já quando o céu escurece), `min_interval` 0.35→0.2s (~5/s no máximo), `ramp_time` 90→60s.

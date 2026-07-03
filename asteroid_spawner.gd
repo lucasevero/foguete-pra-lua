@@ -6,8 +6,10 @@ extends Node2D
 
 @export var asteroid_scene: PackedScene
 @export var dark_start_ratio: float = 0.30   # altitude em que o céu escurece → meteoros começam
-@export var base_interval: float = 0.45      # s entre spawns já quando o céu escurece (bastante meteoro de cara)
-@export var min_interval: float = 0.2        # s entre spawns na dificuldade máxima
+@export var base_interval: float = 0.3       # s entre levas quando o céu escurece
+@export var min_interval: float = 0.15       # s entre levas na dificuldade máxima
+@export var batch_base: int = 3              # meteoros por leva logo que escurece (bastante de cara)
+@export var batch_extra: int = 3             # +meteoros por leva na dificuldade máxima
 @export var ramp_time: float = 60.0          # s (de céu escuro) até a dificuldade ~máxima
 @export var spawn_margin: float = 60.0       # quão acima do topo da tela nasce
 
@@ -42,9 +44,11 @@ func _process(delta: float) -> void:
 	_elapsed += delta
 	var diff := clampf(_elapsed / ramp_time, 0.0, 1.0)  # 0 no começo → 1 conforme o tempo passa
 	var interval := lerpf(base_interval, min_interval, diff)
+	var count := batch_base + int(round(diff * batch_extra))   # muitos por leva; mais com o tempo
 	_timer -= delta
 	while _timer <= 0.0:
-		_spawn(diff)
+		for _k in range(count):
+			_spawn(diff)
 		_timer += interval
 
 func _spawn(diff: float) -> void:
