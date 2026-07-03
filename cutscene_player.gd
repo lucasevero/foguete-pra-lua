@@ -1,8 +1,9 @@
 class_name CutscenePlayer
 extends CanvasLayer
-## Player de cutscene reutilizável e data-driven.
+## Player de cutscene reutilizável e data-driven — layout "tela de chamada" (mobile/portrait).
 ## Consome Array[CutsceneBeat] e toca em sequência. Emite `finished` no fim ou ao pular.
 ## Área: integration. Não conhece gameplay nem GameEvents — é pré-jogo/overlay genérico.
+## Input touch-first: tocar avança; botões Atender/Pular; ui_accept/ui_cancel p/ desktop.
 
 signal finished
 
@@ -22,27 +23,41 @@ var _beats: Array[CutsceneBeat] = []
 var _index: int = -1
 var _typing: bool = false
 var _tween: Tween
+var _in_call: bool = false        # true durante os beats DIALOGUE (após atender) -> timer corre
+var _call_seconds: float = 0.0
 
 @onready var _bg: ColorRect = $Background
-@onready var _p_left: Panel = $PortraitLeft
-@onready var _p_left_initial: Label = $PortraitLeft/Initial
-@onready var _p_left_art: TextureRect = $PortraitLeft/Art
-@onready var _p_right: Panel = $PortraitRight
-@onready var _p_right_initial: Label = $PortraitRight/Initial
-@onready var _p_right_art: TextureRect = $PortraitRight/Art
-@onready var _box: Panel = $DialogueBox
-@onready var _speaker: Label = $DialogueBox/SpeakerName
-@onready var _text: RichTextLabel = $DialogueBox/DialogueText
+@onready var _call_ui: Control = $CallUI
+@onready var _top_bar: Panel = $CallUI/TopBar
+@onready var _call_label: Label = $CallUI/TopBar/CallLabel
+@onready var _speaker: Label = $CallUI/TopBar/Speaker
+@onready var _call_timer: Label = $CallUI/TopBar/CallTimer
+@onready var _avatar: Panel = $CallUI/Avatar
+@onready var _avatar_initial: Label = $CallUI/Avatar/Initial
+@onready var _avatar_art: TextureRect = $CallUI/Avatar/Art
+@onready var _subtitle_box: Panel = $CallUI/SubtitleBox
+@onready var _subtitle: RichTextLabel = $CallUI/SubtitleBox/SubtitleText
+@onready var _answer_button: Button = $CallUI/AnswerButton
+@onready var _skip_button: Button = $CallUI/SkipButton
 @onready var _caption: Label = $Caption
 @onready var _audio: AudioStreamPlayer = $Audio
 
 func _ready() -> void:
+	_answer_button.pressed.connect(advance)
+	_skip_button.pressed.connect(skip)
 	if not beats.is_empty():
 		play(beats)
+
+func _process(delta: float) -> void:
+	if _in_call:
+		_call_seconds += delta
+		_call_timer.text = _format_time(_call_seconds)
 
 func play(p_beats: Array[CutsceneBeat]) -> void:
 	_beats = p_beats
 	_index = -1
+	_in_call = false
+	_call_seconds = 0.0
 	_next()
 
 func advance() -> void:
@@ -78,10 +93,6 @@ func _show_beat(beat: CutsceneBeat) -> void:
 	if beat.sfx != null:
 		_audio.stream = beat.sfx
 		_audio.play()
-	_caption.visible = false
-	_box.visible = false
-	_p_left.visible = false
-	_p_right.visible = false
 	match beat.kind:
 		CutsceneBeat.Kind.CAPTION:
 			_show_caption(beat)
@@ -91,19 +102,40 @@ func _show_beat(beat: CutsceneBeat) -> void:
 			_show_dialogue(beat)
 	_arm_auto_advance(beat)
 
-func _show_dialogue(beat: CutsceneBeat) -> void:
-	_box.visible = true
+func _show_call(beat: CutsceneBeat) -> void:
+	# Tela "recebendo chamada": estruturada a partir de beat.speaker.
+	# (beat.text não é exibido aqui — o CALL é UI estruturada, não uma frase.)
+	_in_call = false
+	_call_ui.visible = true
+	_caption.visible = false
+	_top_bar.visible = true
+	_call_label.text = "chamando…"
 	_speaker.text = beat.speaker
-	_show_portrait(beat)
+	_call_timer.visible = false
+	_subtitle_box.visible = false
+	_answer_button.visible = true
+	_skip_button.visible = true
+	_set_avatar(beat)
+	_typing = false
+
+func _show_dialogue(beat: CutsceneBeat) -> void:
+	_in_call = true
+	_call_ui.visible = true
+	_caption.visible = false
+	_top_bar.visible = true
+	_call_label.text = "chamada"
+	_speaker.text = beat.speaker
+	_call_timer.visible = true
+	_subtitle_box.visible = true
+	_answer_button.visible = false
+	_skip_button.visible = true
+	_set_avatar(beat)
 	_start_typing(beat.text)
 
-func _show_call(beat: CutsceneBeat) -> void:
-	_box.visible = true
-	_speaker.text = ""
-	var line := beat.text if not beat.text.is_empty() else "%s chamando…" % beat.speaker
-	_start_typing(line)
-
 func _show_caption(beat: CutsceneBeat) -> void:
+	# A ligação "desligou": derruba a moldura de chamada, mostra a legenda central.
+	_in_call = false
+	_call_ui.visible = false
 	_caption.visible = true
 	_caption.text = beat.text
 	_caption.modulate.a = 0.0
@@ -111,35 +143,30 @@ func _show_caption(beat: CutsceneBeat) -> void:
 	_tween = create_tween()
 	_tween.tween_property(_caption, "modulate:a", 1.0, 0.6)
 
-func _show_portrait(beat: CutsceneBeat) -> void:
-	var use_left := beat.portrait_side == CutsceneBeat.PortraitSide.LEFT
-	var panel := _p_left if use_left else _p_right
-	var initial := _p_left_initial if use_left else _p_right_initial
-	var art := _p_left_art if use_left else _p_right_art
-	panel.visible = true
+func _set_avatar(beat: CutsceneBeat) -> void:
 	if beat.portrait != null:
-		art.texture = beat.portrait
-		art.visible = true
-		initial.visible = false
+		_avatar_art.texture = beat.portrait
+		_avatar_art.visible = true
+		_avatar_initial.visible = false
 	else:
-		art.visible = false
-		initial.visible = true
-		initial.text = beat.speaker.substr(0, 1)
-		panel.modulate = SPEAKER_COLORS.get(beat.speaker, DEFAULT_SPEAKER_COLOR)
+		_avatar_art.visible = false
+		_avatar_initial.visible = true
+		_avatar_initial.text = beat.speaker.substr(0, 1)
+		_avatar.modulate = SPEAKER_COLORS.get(beat.speaker, DEFAULT_SPEAKER_COLOR)
 
 func _start_typing(full_text: String) -> void:
-	_text.text = full_text
-	_text.visible_ratio = 0.0
+	_subtitle.text = full_text
+	_subtitle.visible_ratio = 0.0
 	_typing = true
 	var dur := maxf(0.2, float(full_text.length()) / CHARS_PER_SEC)
 	_tween = create_tween()
-	_tween.tween_property(_text, "visible_ratio", 1.0, dur)
+	_tween.tween_property(_subtitle, "visible_ratio", 1.0, dur)
 	_tween.finished.connect(func(): _typing = false)
 
 func _finish_typing() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
-	_text.visible_ratio = 1.0
+	_subtitle.visible_ratio = 1.0
 	_typing = false
 
 func _arm_auto_advance(beat: CutsceneBeat) -> void:
@@ -150,8 +177,13 @@ func _arm_auto_advance(beat: CutsceneBeat) -> void:
 				_next()
 		)
 
+func _format_time(seconds: float) -> String:
+	var total := int(seconds)
+	return "%d:%02d" % [total / 60, total % 60]
+
 func _cleanup() -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
 	_index = _beats.size()
 	_typing = false
+	_in_call = false
