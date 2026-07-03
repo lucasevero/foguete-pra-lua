@@ -21,6 +21,6 @@ repeat_size = Vector2(256, 256)
 [node name="StarsSprite" type="Sprite2D" parent="Stars"]
 centered = false
 
-[node name="Earth" type="Sprite2D" parent="."]
+[node name="City" type="Sprite2D" parent="."]
 
 [node name="Moon" type="Sprite2D" parent="."]

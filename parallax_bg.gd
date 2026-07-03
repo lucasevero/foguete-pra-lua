@@ -1,23 +1,23 @@
 extends Node2D
 ## DONO: Dev C — camadas de fundo. Área: pickups.
 ## Céu (gradiente por código) + estrelas (Parallax2D, aparecem no espaço) +
-## marcos Terra (embaixo) e Lua (topo) em Y fixo no mundo.
+## CIDADE/chão no início (skyline estilo São Paulo) + Lua (bola) no topo.
 ##
-## Escuta GameEvents.altitude_changed (0.0 = Terra, 1.0 = Lua).
+## Escuta GameEvents.altitude_changed (0.0 = chão, 1.0 = Lua).
 ##
 ## PLACEHOLDERS PROCEDURAIS: enquanto não chega a pixel art, gera texturas
 ## simples em código. Pra usar o sprite real: no editor, arraste o PNG pra
-## `texture` do nó (StarsSprite / Earth / Moon) — o placeholder some sozinho.
+## `texture` do nó (StarsSprite / City / Moon) — o placeholder some sozinho.
 
 @export var earth_sky: Color = Color(0.53, 0.81, 0.92)
 @export var deep_space: Color = Color(0.02, 0.02, 0.08)
-@export var earth_y: float = 1100.0    # deve casar com o início do player
+@export var ground_y: float = 1120.0   # chão/cidade no início (casar com player start ~950)
 @export var moon_y: float = -4050.0    # deve casar com moon de game_manager
 
 @onready var sky_rect: ColorRect = $SkyLayer/SkyRect
 @onready var stars: Parallax2D = $Stars
 @onready var stars_sprite: Sprite2D = $Stars/StarsSprite
-@onready var earth: Sprite2D = $Earth
+@onready var city: Sprite2D = $City
 @onready var moon: Sprite2D = $Moon
 
 func _ready() -> void:
@@ -26,9 +26,9 @@ func _ready() -> void:
 	if stars_sprite.texture == null:
 		stars_sprite.texture = _make_star_tile(256)
 		stars.repeat_size = Vector2(256, 256)
-	if earth.texture == null:
-		earth.texture = _make_disc(360, Color(0.2, 0.5, 0.9))
-	earth.position = Vector2(360, earth_y)
+	if city.texture == null:
+		city.texture = _make_city(720, 340)
+	city.position = Vector2(360, ground_y)
 	if moon.texture == null:
 		moon.texture = _make_disc(240, Color(0.82, 0.82, 0.86))
 	moon.position = Vector2(360, moon_y)
@@ -59,4 +59,29 @@ func _make_disc(diameter: int, color: Color) -> ImageTexture:
 		for x in diameter:
 			if Vector2(x, y).distance_to(center) <= radius - 1.0:
 				img.set_pixel(x, y, color)
+	return ImageTexture.create_from_image(img)
+
+func _make_city(w: int, h: int) -> ImageTexture:
+	# Skyline placeholder: prédios silhueta com janelas acesas (troca por pixel art).
+	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	var x := 0
+	while x < w:
+		var bw := randi_range(28, 64)
+		var bh := randi_range(90, h - 20)
+		var col := Color(0.10, 0.10, 0.15).lerp(Color(0.20, 0.20, 0.27), randf())
+		var right := mini(x + bw, w)
+		for by in range(h - bh, h):
+			for bx in range(x, right):
+				img.set_pixel(bx, by, col)
+		# janelas acesas
+		var yy := h - bh + 8
+		while yy < h - 6:
+			var xx := x + 5
+			while xx < right - 4:
+				if randf() < 0.45:
+					img.set_pixel(xx, yy, Color(1.0, 0.9, 0.5, 1.0))
+				xx += 6
+			yy += 9
+		x += bw + randi_range(2, 8)
 	return ImageTexture.create_from_image(img)
