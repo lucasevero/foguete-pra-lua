@@ -5,6 +5,10 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Painéis do HUD/menu transparentes
+- `ui.tscn`: HudPanel, TiltPanel, MenuPanel e CreditsPanel com `self_modulate` alpha 0 (some a caixa navy, mantém o conteúdo). Pedido: os "blocos com fundo azul" deviam ficar transparentes.
+- Legibilidade: contorno escuro (`font_outline`) nos textos do HUD (FuelValue, CoinLabel, TimeLabel, TiltCaption, ResultLabel), já que ficam sobre o céu claro sem a caixa. Menu fica sobre o Dim, então dispensa.
+
 ## 2026-07-03 — Cutscene só no JOGAR (REINICIAR joga direto)
 - `game_manager.gd`: no `_ready`, o ramo `_has_started_once` (caminho do REINICIAR/reload) voltou a chamar `_begin()` em vez de `_play_cutscene()`. Agora só o **JOGAR** (via `_on_start_requested`) toca a cutscene; **REINICIAR** entra direto no jogo.
 - Validado: BOOT=menu, JOGAR→cutscene, recriar cena com flag=true (=REINICIAR)→jogo direto sem cutscene (RESULT_OK).
