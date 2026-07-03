@@ -8,3 +8,6 @@ build/
 
 # Claude Code — per-user local settings (shared context IS committed)
 .claude/settings.local.json
+
+# macOS
+.DS_Store
