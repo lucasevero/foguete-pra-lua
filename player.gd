@@ -22,6 +22,7 @@ extends CharacterBody2D
 
 var fuel: float
 var angular_velocity: float = 0.0
+var _has_taken_off: bool = false
 
 func _ready() -> void:
 	fuel = max_fuel
@@ -59,9 +60,13 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-	# no chão: não deixa a gravidade acumular (senão o empuxo não levanta)
-	if is_on_floor() and velocity.y > 0.0:
-		velocity.y = 0.0
+	if is_on_floor():
+		if velocity.y > 0.0:      # não deixa a gravidade acumular (senão o empuxo não levanta)
+			velocity.y = 0.0
+		if _has_taken_off:        # decolou e caiu de volta no chão = game over
+			GameEvents.player_died.emit()
+	else:
+		_has_taken_off = true
 
 func _on_fuel_collected(amount: float) -> void:
 	fuel = minf(max_fuel, fuel + amount)

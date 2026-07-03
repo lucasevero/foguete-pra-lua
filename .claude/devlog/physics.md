@@ -5,6 +5,9 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Cair no chão após decolar = game over
+- Flag `_has_taken_off` (vira true ao sair do chão). Se `is_on_floor()` de novo depois disso → emite `player_died`. No início, pousado, não conta.
+
 ## 2026-07-03 — Começa pousado + gasolina mais lenta
 - `fuel_burn_rate` 25→10 (era ~4s de empuxo total, agora ~10s + pickups).
 - Foguete começa pousado no chão (StaticBody em main.tscn, y=974). Zero `velocity.y` quando `is_on_floor()` — senão a gravidade acumulava e o empuxo não levantava.
