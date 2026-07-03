@@ -27,7 +27,8 @@ func _ready() -> void:
 	buy_weapon.pressed.connect(_buy.bind("weapon"))
 	GameEvents.coins_changed.connect(_on_coins_changed)
 	GameEvents.game_started.connect(func(): shop_button.show())   # aparece quando começa a partida
-	GameEvents.game_over.connect(func(_w): shop_button.hide(); _close())
+	# no game over: esconde a loja SEM despausar (o GameManager controla a pausa aqui)
+	GameEvents.game_over.connect(func(_w): shop_button.hide(); panel.hide())
 
 func _on_coins_changed(total: int) -> void:
 	_coins = total   # contador agora fica no HUD (ui.tscn); aqui só atualiza o saldo do painel
