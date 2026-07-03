@@ -5,8 +5,9 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
-## 2026-07-03 — Cair no chão após decolar = game over
-- Flag `_has_taken_off` (vira true ao sair do chão). Se `is_on_floor()` de novo depois disso → emite `player_died`. No início, pousado, não conta.
+## 2026-07-03 — Cair no chão após decolar = game over (pouso suave OK)
+- Flag `_has_taken_off` (vira true ao sair do chão). Ao tocar o chão de novo: se descida > `safe_land_speed` (250) → `player_died` (crash); senão pouso suave, reseta flag (pode decolar de novo).
+- `descent` capturado antes do move_and_slide (que zera velocity no impacto).
 
 ## 2026-07-03 — Começa pousado + gasolina mais lenta
 - `fuel_burn_rate` 25→10 (era ~4s de empuxo total, agora ~10s + pickups).

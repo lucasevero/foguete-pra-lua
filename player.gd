@@ -19,6 +19,7 @@ extends CharacterBody2D
 @export var linear_drag: float = 0.4        # arrasto lateral
 @export var max_fuel: float = 100.0
 @export var fuel_burn_rate: float = 10.0    # combustível/s enquanto empurra
+@export var safe_land_speed: float = 250.0  # descida máx p/ pouso seguro; acima disso = crash
 
 var fuel: float
 var angular_velocity: float = 0.0
@@ -58,13 +59,17 @@ func _physics_process(delta: float) -> void:
 	rotation += angular_velocity * delta
 	velocity.x -= velocity.x * linear_drag * delta
 
+	var descent := velocity.y   # velocidade de descida ANTES do move_and_slide zerar no impacto
 	move_and_slide()
 
 	if is_on_floor():
+		if _has_taken_off:
+			if descent > safe_land_speed:
+				GameEvents.player_died.emit()   # bateu forte = crash
+			else:
+				_has_taken_off = false          # pouso suave, ok (pode decolar de novo)
 		if velocity.y > 0.0:      # não deixa a gravidade acumular (senão o empuxo não levanta)
 			velocity.y = 0.0
-		if _has_taken_off:        # decolou e caiu de volta no chão = game over
-			GameEvents.player_died.emit()
 	else:
 		_has_taken_off = true
 
