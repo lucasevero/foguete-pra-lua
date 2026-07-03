@@ -7,6 +7,13 @@ extends Node2D
 @export var distance_jitter: float = 0.4    # variação aleatória (0 = grade perfeita)
 @export var spawn_margin: float = 60.0      # quão acima do topo da tela nasce
 
+# 3 tamanhos: textura + escala (a colisão escala junto com o nó).
+const VARIANTS := [
+	{"tex": preload("res://assets/sprites/obstacles/asteroid_01.png"), "scale": 0.5},  # pequeno
+	{"tex": preload("res://assets/sprites/obstacles/asteroid_02.png"), "scale": 0.7},  # médio
+	{"tex": preload("res://assets/sprites/obstacles/asteroid_03.png"), "scale": 1.0},  # grande
+]
+
 var _player: Node2D
 var _next_spawn_y: float
 
@@ -31,5 +38,9 @@ func _spawn() -> void:
 	var to_world := vp.get_canvas_transform().affine_inverse()  # tela -> mundo
 	var sx := randf() * screen_size.x
 	var a := asteroid_scene.instantiate()
+	var v: Dictionary = VARIANTS[randi() % VARIANTS.size()]
+	a.get_node("Sprite").texture = v["tex"]
+	a.scale = Vector2(v["scale"], v["scale"])   # escala colisão junto
 	add_child(a)
 	a.global_position = to_world * Vector2(sx, -spawn_margin)  # acima do topo
+

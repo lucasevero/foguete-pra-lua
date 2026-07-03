@@ -5,6 +5,10 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — 3 tamanhos de asteroide + pixel art
+- asteroid.tscn: ColorRect → Sprite2D + CircleShape base radius 45. Grupo "asteroid" mantido.
+- asteroid_spawner: `VARIANTS` sorteia textura+escala: asteroid_01 (0.5, pequeno), asteroid_02 (0.7, médio), asteroid_03 (1.0, grande). Escala o nó → colisão escala junto.
+
 ## 2026-07-03 — Fase 2: spawn correto
 - Spawn agora **acima do topo visível** sempre (converte tela→mundo via `canvas_transform.affine_inverse`), nunca dentro da tela.
 - Spawn por **distância de subida** (não tempo) → densidade constante por trecho, imune à velocidade (corrige exploit de acelerar sem parar). `spawn_distance` ~220px + jitter.
