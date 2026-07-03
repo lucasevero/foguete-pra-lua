@@ -29,12 +29,31 @@ func _initialize() -> void:
 	# skip() finaliza imediatamente
 	var player2: CutscenePlayer = scene.instantiate()
 	get_root().add_child(player2)
-	await process_frame
+	await process_frame  # deixa o _ready()/@onready do player rodar antes de usá-lo
 	var done2 := {"v": false}
 	player2.finished.connect(func(): done2["v"] = true)
 	player2.play(beats)
 	player2.skip()
 	ok = _check(done2["v"], "skip() deveria disparar finished") and ok
+
+	# CALL + CAPTION: cobre os dois outros caminhos de render (chamada e legenda)
+	var player3: CutscenePlayer = scene.instantiate()
+	get_root().add_child(player3)
+	await process_frame  # deixa o _ready()/@onready do player rodar antes de usá-lo
+	var done3 := {"v": false}
+	player3.finished.connect(func(): done3["v"] = true)
+	var caption_beats: Array[CutsceneBeat] = [
+		CutsceneBeat.make(CutsceneBeat.Kind.CALL, "CARLOS", "CARLOS chamando…"),
+		CutsceneBeat.make(CutsceneBeat.Kind.CAPTION, "", "Missão de resgate iniciada."),
+	]
+	player3.play(caption_beats)
+
+	var guard3 := 0
+	while not done3["v"] and guard3 < 20:
+		player3.advance()
+		guard3 += 1
+	ok = _check(done3["v"], "finished deveria disparar ao fim dos beats CALL/CAPTION") and ok
+	ok = _check(guard3 < 20, "não deve precisar de 20 advances no CALL/CAPTION (loop travado?)") and ok
 
 	if ok:
 		print("TEST_OK test_cutscene_player")

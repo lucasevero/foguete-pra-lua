@@ -5,7 +5,7 @@ extends Node
 @onready var _player: CutscenePlayer = $CutscenePlayer
 
 func _ready() -> void:
-	_player.finished.connect(_on_finished)
+	_player.finished.connect(_on_finished, CONNECT_ONE_SHOT)
 	_player.play(CutsceneIntro.build())
 
 func _on_finished() -> void:

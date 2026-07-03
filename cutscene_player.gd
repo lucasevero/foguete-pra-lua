@@ -100,7 +100,8 @@ func _show_dialogue(beat: CutsceneBeat) -> void:
 func _show_call(beat: CutsceneBeat) -> void:
 	_box.visible = true
 	_speaker.text = ""
-	_start_typing("%s chamando…" % beat.speaker)
+	var line := beat.text if not beat.text.is_empty() else "%s chamando…" % beat.speaker
+	_start_typing(line)
 
 func _show_caption(beat: CutsceneBeat) -> void:
 	_caption.visible = true
