@@ -5,8 +5,8 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
-## 2026-07-03 — Emite thrust_changed (áudio)
-- ⚠️ CONTRATO: Player emite `thrust_changed(active)` na virada do empuxo (`_thrusting`). AudioManager usa p/ som do motor.
+## 2026-07-03 — Emite thrust_changed / lifted_off / landed_safely (áudio)
+- ⚠️ CONTRATO: Player emite `thrust_changed(active)` (virada do empuxo), `lifted_off` (sai do chão 1ª vez), `landed_safely` (pouso suave). AudioManager usa p/ SFX.
 
 ## 2026-07-03 — Cair no chão após decolar = game over (pouso suave OK)
 - Flag `_has_taken_off` (vira true ao sair do chão). Ao tocar o chão de novo: se descida > `safe_land_speed` (250) → `player_died` (crash); senão pouso suave, reseta flag (pode decolar de novo).

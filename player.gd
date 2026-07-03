@@ -72,11 +72,13 @@ func _physics_process(delta: float) -> void:
 			if descent > safe_land_speed:
 				GameEvents.player_died.emit()   # bateu forte = crash
 			else:
-				_has_taken_off = false          # pouso suave, ok (pode decolar de novo)
+				GameEvents.landed_safely.emit() # pouso suave, ok (pode decolar de novo)
+				_has_taken_off = false
 		if velocity.y > 0.0:      # não deixa a gravidade acumular (senão o empuxo não levanta)
 			velocity.y = 0.0
-	else:
+	elif not _has_taken_off:
 		_has_taken_off = true
+		GameEvents.lifted_off.emit()            # saiu do chão pela 1ª vez
 
 func _on_fuel_collected(amount: float) -> void:
 	fuel = minf(max_fuel, fuel + amount)

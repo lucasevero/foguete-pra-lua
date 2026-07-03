@@ -13,6 +13,8 @@ signal player_reached_moon                            # GameManager escuta
 
 # --- Player -> áudio ---
 signal thrust_changed(active: bool)                   # AudioManager escuta (liga/desliga som do motor)
+signal lifted_off                                     # AudioManager: som de decolagem (sai do chão 1ª vez)
+signal landed_safely                                  # AudioManager: som de pouso suave
 
 # --- Pickups / obstáculos -> Player ---
 signal fuel_collected(amount: float)                  # Player escuta, adiciona combustível

@@ -5,6 +5,13 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — SFX de gameplay integrados
+- ⚠️ CONTRATO: +2 signals `lifted_off`, `landed_safely` (Player → AudioManager). CONTRACT.md + game_events.gd atualizados.
+- AudioManager conecta todos SFX de gameplay (8-bit, gerados via ffmpeg/python): liftoff, fuel_pickup, crash_asteroid (alto), crash_ground (explosão longa), land_soft, fuel_low (alarme).
+- Truques: `_skip_ground_crash` evita som duplo quando morre por asteroide (asteroid_hit já toca crash_ast, então o player_died seguinte pula o crash_gnd). fuel_low dispara ao cruzar 25% (via fuel_changed), reseta ao reabastecer.
+- Merge: música agora inicia via `_on_game_started` (MUSIC_START=10s), não no _ready (integra com a mudança de restart do Dev D).
+- TODO: SFX de vitória/game over (win.wav, game_over.wav).
+
 ## 2026-07-03 — Música reinicia ao reiniciar o jogo
 - `audio_manager.gd`: o tema agora reinicia (play a partir de `MUSIC_START`=10s) a cada `game_started`, em vez de tocar eternamente através do reload. O autoload persiste no `reload_current_scene()`, então a música só reinicia via signal; `GameManager` já reemite `game_started` no restart.
 - Sem mudança de contrato (`game_started` já existia e já era emitido). Validado: emitir `game_started` 2× → posição da faixa volta de ~10.6s para ~10.0s.
@@ -15,6 +22,7 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 - `ui.gd`: barra usa `fuel_changed` (max/value) + label numérico; **tint vermelho** quando combustível ≤ 25%.
 - Sem mudança de contrato (só escuta `fuel_changed`/`time_changed`/`game_over`). Validado renderizando o viewport (janela do jogo abre fora da tela no macOS; screenshot direto não pega).
 - TODO: menu inicial (Fase 7) reutiliza o mesmo botão; indicador de inclinação no HUD; áudio/música (Fase 5 restante).
+
 ## 2026-07-03 — Áudio: AudioManager + tema + som do motor
 - ⚠️ CONTRATO: novo signal `thrust_changed(active)` (Player → AudioManager). CONTRACT.md + game_events.gd atualizados. Avisar time (git pull).
 - Autoload `AudioManager` (escuta signals, toca sons). Toca `theme_main.mp3` (Space Oddity 8-bit, loop) no start + `thrust_loop.wav` (motor 8-bit, v1 pesado) enquanto o empuxo tá ativo. process_mode=ALWAYS.
