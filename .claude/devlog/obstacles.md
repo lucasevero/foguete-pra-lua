@@ -5,6 +5,11 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Obstáculos de baixa altitude: pombos + zepelins
+- `flyer.gd` (Area2D genérico, `velocity` setada no spawn; emite `asteroid_hit`; grupo "asteroid" p/ arma destruir). pigeon.tscn (capsula pequena horizontal) e zeppelin.tscn (capsula longa horizontal) — hitboxes no formato; placeholders ColorRect (aguardando sprites reais).
+- `low_obstacle_spawner.gd`: só spawna com céu claro (`ratio < active_max_ratio`=0.30, casa com dark_start_ratio do asteroid_spawner). Pombos diagonal lentos (spawn no topo), zepelins horizontal mais rápidos (spawn nas laterais). Por tempo. Escuta altitude_changed/game_started. Sem mudança de contrato.
+- main.tscn: LowObstacleSpawner com pigeon_scene/zeppelin_scene.
+
 ## 2026-07-03 — Meteoros só no céu escuro + dificuldade por tempo
 - (implementado pela squad de integração a pedido do humano — era o `TODO(Dev B)` do spawner.)
 - `asteroid_spawner.gd`: passa a escutar `altitude_changed` (0=chão claro, 1=Lua) e `game_started`. **NÃO spawna enquanto o céu está claro** (`ratio < dark_start_ratio`=0.30); começa quando o céu escurece.
