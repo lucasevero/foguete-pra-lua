@@ -1,30 +1,100 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://ui.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dkmcwbsdd007" path="res://assets/ui/panel.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://b3a44setgb385" path="res://assets/ui/fuel_icon.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://c6bj8nbxufeax" path="res://assets/ui/clock_icon.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://e3ijhbvnjm5n" path="res://assets/ui/gauge_frame.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://03lot78bwbbc" path="res://assets/ui/gauge_fill.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://m13t25xsy1jk" path="res://assets/ui/button_normal.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://d0hcoyg8xhs2r" path="res://assets/ui/button_pressed.png" id="8"]
+
+[sub_resource type="StyleBoxTexture" id="btn_normal"]
+texture = ExtResource("7")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="btn_pressed"]
+texture = ExtResource("8")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
 
 [node name="UI" type="CanvasLayer"]
 process_mode = 3
 script = ExtResource("1")
 
-[node name="FuelLabel" type="Label" parent="."]
+[node name="HudPanel" type="NinePatchRect" parent="."]
 offset_left = 16.0
 offset_top = 16.0
-offset_right = 320.0
-offset_bottom = 40.0
-text = "Combustível:"
+offset_right = 400.0
+offset_bottom = 150.0
+texture = ExtResource("2")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
 
-[node name="TimeLabel" type="Label" parent="."]
-offset_left = 16.0
-offset_top = 44.0
-offset_right = 320.0
-offset_bottom = 68.0
-text = "Tempo:"
+[node name="FuelIcon" type="TextureRect" parent="HudPanel"]
+offset_left = 14.0
+offset_top = 12.0
+offset_right = 62.0
+offset_bottom = 60.0
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FuelBar" type="TextureProgressBar" parent="HudPanel"]
+offset_left = 72.0
+offset_top = 22.0
+offset_right = 372.0
+offset_bottom = 54.0
+max_value = 100.0
+value = 100.0
+nine_patch_stretch = true
+stretch_margin_left = 5
+stretch_margin_top = 5
+stretch_margin_right = 5
+stretch_margin_bottom = 5
+texture_under = ExtResource("5")
+texture_progress = ExtResource("6")
+
+[node name="FuelValue" type="Label" parent="HudPanel"]
+offset_left = 72.0
+offset_top = 22.0
+offset_right = 372.0
+offset_bottom = 54.0
+theme_override_font_sizes/font_size = 20
+text = "100 / 100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClockIcon" type="TextureRect" parent="HudPanel"]
+offset_left = 14.0
+offset_top = 74.0
+offset_right = 62.0
+offset_bottom = 122.0
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TimeLabel" type="Label" parent="HudPanel"]
+offset_left = 72.0
+offset_top = 82.0
+offset_right = 372.0
+offset_bottom = 118.0
+theme_override_font_sizes/font_size = 28
+text = "Tempo: --"
+vertical_alignment = 1
 
 [node name="ResultLabel" type="Label" parent="."]
 offset_left = 40.0
 offset_top = 520.0
 offset_right = 680.0
-offset_bottom = 620.0
+offset_bottom = 640.0
 theme_override_font_sizes/font_size = 40
 text = "GAME OVER"
 horizontal_alignment = 1
@@ -32,9 +102,16 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="RestartButton" type="Button" parent="."]
-offset_left = 240.0
-offset_top = 660.0
-offset_right = 480.0
-offset_bottom = 740.0
+offset_left = 230.0
+offset_top = 720.0
+offset_right = 490.0
+offset_bottom = 800.0
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_normal")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_normal")
+theme_override_colors/font_color = Color(0.91, 0.94, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.91, 0.94, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 32
 text = "REINICIAR"
