@@ -6,6 +6,13 @@ const SKY := Color(0.35, 0.65, 0.95)   # azul-céu da base de lançamento (legen
 const MOON := Color(0.11, 0.12, 0.18)  # cinza-espaço escuro (ambiente LUA)
 const ROOM := Color(0.28, 0.20, 0.15)  # marrom-quente (seu quarto na TERRA)
 
+# Retratos pixel-art dos personagens (assets/cutscenes/). Carlos calmo no
+# primeiro diálogo, aflito no resto; Você = Luca; Gus sorridente.
+const CARLOS_1 := preload("res://assets/cutscenes/carlos1.png")
+const CARLOS_2 := preload("res://assets/cutscenes/carlos2.png")
+const LUCA_1 := preload("res://assets/cutscenes/luca1.png")
+const GUS_1 := preload("res://assets/cutscenes/gus1.png")
+
 static func build() -> Array[CutsceneBeat]:
 	var K := CutsceneBeat.Kind
 	var S := CutsceneBeat.PortraitSide
@@ -20,4 +27,12 @@ static func build() -> Array[CutsceneBeat]:
 		CutsceneBeat.make(K.CAPTION, "", "Missão de resgate iniciada.", S.LEFT, SKY, ""),
 	]
 	beats[7].auto_advance_after = 2.5   # a legenda final aparece sozinha e segue pro jogo
+	# retratos por beat (o beat 7/legenda fica sem retrato)
+	beats[0].portrait = CARLOS_1   # recebendo chamada
+	beats[1].portrait = CARLOS_1   # primeiro diálogo (calmo)
+	beats[2].portrait = LUCA_1     # Você (Luca)
+	beats[3].portrait = CARLOS_2   # aflito
+	beats[4].portrait = CARLOS_2
+	beats[5].portrait = GUS_1      # Gus ao fundo
+	beats[6].portrait = CARLOS_2
 	return beats

@@ -130,11 +130,12 @@ func _set_avatar(beat: CutsceneBeat) -> void:
 		_avatar_art.texture = beat.portrait
 		_avatar_art.visible = true
 		_avatar_initial.visible = false
+		_avatar.self_modulate = Color(1, 1, 1, 0)   # esconde a caixa placeholder; mostra só o sprite transparente
 	else:
 		_avatar_art.visible = false
 		_avatar_initial.visible = true
 		_avatar_initial.text = beat.speaker.substr(0, 1)
-		_avatar.modulate = SPEAKER_COLORS.get(beat.speaker, DEFAULT_SPEAKER_COLOR)
+		_avatar.self_modulate = SPEAKER_COLORS.get(beat.speaker, DEFAULT_SPEAKER_COLOR)
 
 func _start_typing(full_text: String) -> void:
 	_subtitle.text = full_text

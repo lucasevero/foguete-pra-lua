@@ -24,10 +24,10 @@ theme_override_font_sizes/font_size = 30
 [node name="Avatar" type="Panel" parent="Scene"]
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -160.0
-offset_top = 300.0
-offset_right = 160.0
-offset_bottom = 620.0
+offset_left = -240.0
+offset_top = 150.0
+offset_right = 240.0
+offset_bottom = 700.0
 
 [node name="Initial" type="Label" parent="Scene/Avatar"]
 anchor_right = 1.0
