@@ -46,21 +46,17 @@ func _spawn_pigeon() -> void:
 	var vp := get_viewport()
 	var sz := vp.get_visible_rect().size
 	var to_world := vp.get_canvas_transform().affine_inverse()
-	var dir := 1.0 if randf() < 0.5 else -1.0
 	var p := pigeon_scene.instantiate()
-	p.velocity = Vector2(dir * pigeon_speed * 0.8, pigeon_speed * 0.6)  # diagonal lenta
+	p.velocity = Vector2(pigeon_speed * 0.8, pigeon_speed * 0.6)         # diagonal lenta, sempre p/ direita
 	add_child(p)
-	p.global_position = to_world * Vector2(randf() * sz.x, -60.0)        # acima do topo
+	p.global_position = to_world * Vector2(randf_range(-40.0, sz.x * 0.3), -60.0)  # nasce à esquerda/topo
 
 func _spawn_zeppelin() -> void:
 	var vp := get_viewport()
 	var sz := vp.get_visible_rect().size
 	var to_world := vp.get_canvas_transform().affine_inverse()
-	var from_left := randf() < 0.5
-	var sx := -120.0 if from_left else sz.x + 120.0
-	var vx := zeppelin_speed if from_left else -zeppelin_speed
 	var sy := randf_range(120.0, sz.y * 0.5)                            # banda superior da tela
 	var z := zeppelin_scene.instantiate()
-	z.velocity = Vector2(vx, 0.0)
+	z.velocity = Vector2(zeppelin_speed, 0.0)                           # sempre esquerda -> direita
 	add_child(z)
-	z.global_position = to_world * Vector2(sx, sy)
+	z.global_position = to_world * Vector2(-120.0, sy)                  # nasce fora, à esquerda
