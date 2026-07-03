@@ -112,5 +112,21 @@ func _end(won: bool) -> void:
 	if not running:
 		return
 	running = false
-	GameEvents.game_over.emit(won)   # UI mostra o botão REINICIAR (process_mode=ALWAYS)
 	get_tree().paused = true         # congela o jogo (player, spawners, asteroides)
+	if won:
+		_play_final_cutscene()       # CENA 2; ao terminar, mostra o game over
+	else:
+		GameEvents.game_over.emit(false)   # UI mostra o botão REINICIAR
+
+func _play_final_cutscene() -> void:
+	# CENA 2 (a chegada) por cima da árvore pausada; ao terminar → game over (vitória).
+	GameEvents.cutscene_started.emit()          # UI esconde o HUD enquanto toca
+	var cs: CutscenePlayer = CUTSCENE.instantiate()
+	cs.layer = 100
+	cs.process_mode = Node.PROCESS_MODE_ALWAYS  # roda com a árvore pausada
+	add_child(cs)
+	cs.finished.connect(func() -> void:
+		cs.queue_free()
+		GameEvents.game_over.emit(true)         # mostra REINICIAR/menu
+	, CONNECT_ONE_SHOT)
+	cs.play(CutsceneFinal.build())

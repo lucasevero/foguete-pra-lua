@@ -14,6 +14,13 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 - Validado: BOOT=menu, JOGAR→cutscene, recriar cena com flag=true (=REINICIAR)→jogo direto sem cutscene (RESULT_OK).
 - (Revertida a tentativa de arte das moedas — não commitada.)
 
+## 2026-07-03 — CENA 2 (final) dispara ao vencer
+- `game_manager._end(true)` agora chama `_play_final_cutscene()` em vez de emitir `game_over(true)` direto: instancia o `CutscenePlayer` inline (mesma receita do `_play_cutscene` de abertura — `layer=100`, `process_mode=ALWAYS`, roda com a árvore pausada) e toca `CutsceneFinal.build()`; `_end(false)` (derrota) segue emitindo `game_over(false)` como antes. Ao terminar a cutscene → `game_over(true)`, aí sim a UI mostra REINICIAR/menu.
+- Reaproveita `CutscenePlayer` + os 2 backgrounds novos da CENA 2 (`moon_surface`, `moon_sit`) e os retratos/`lua_bg` já existentes (Tasks 1–2); ajuste no player para beats sem retrato/nome (planos de ação/wide-shot, beats 6–8 "no telefone").
+- **Sem mudança de contrato** — reusa `game_over` e `cutscene_started`, ambos já em `game_events.gd`/`CONTRACT.md`.
+- ⚠️ Mexi no `game_manager.gd` (**compartilhado**, o outro Dev D também edita) — só a função `_end` + a nova `_play_final_cutscene`, nada mais no arquivo. Avisar o time (git pull) e dar push rápido pra minimizar janela de conflito.
+- Verificação: suíte headless completa (import + `test_cutscene_final`/`test_cutscene_data`/`test_cutscene_player` + smoke `main.tscn`) tudo OK. **Pendente:** playtest F5 vencendo a partida (chegar na Lua) pra conferir a CENA 2 na prática (timing, os 2 fundos novos) — headless não exercita esse caminho porque só dispara ao vencer.
+
 ## 2026-07-03 — Fix: áudio continuava tocando em background
 - `audio_manager.gd` `_notification`: muta o bus master em NOTIFICATION_APPLICATION_PAUSED / WM_WINDOW_FOCUS_OUT (app em background / tela off / perde foco), desmuta em RESUMED / FOCUS_IN. Resolve música tocando fora do app (web/mobile).
 
