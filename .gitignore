@@ -3,3 +3,6 @@
 /android/
 export_presets.cfg
 *.translation
+
+# Claude Code — per-user local settings (shared context IS committed)
+.claude/settings.local.json
