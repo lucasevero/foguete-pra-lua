@@ -11,6 +11,11 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 - `ui.gd`: barra usa `fuel_changed` (max/value) + label numérico; **tint vermelho** quando combustível ≤ 25%.
 - Sem mudança de contrato (só escuta `fuel_changed`/`time_changed`/`game_over`). Validado renderizando o viewport (janela do jogo abre fora da tela no macOS; screenshot direto não pega).
 - TODO: menu inicial (Fase 7) reutiliza o mesmo botão; indicador de inclinação no HUD; áudio/música (Fase 5 restante).
+## 2026-07-03 — Áudio: AudioManager + tema + som do motor
+- ⚠️ CONTRATO: novo signal `thrust_changed(active)` (Player → AudioManager). CONTRACT.md + game_events.gd atualizados. Avisar time (git pull).
+- Autoload `AudioManager` (escuta signals, toca sons). Toca `theme_main.mp3` (Space Oddity 8-bit, loop) no start + `thrust_loop.wav` (motor 8-bit, v1 pesado) enquanto o empuxo tá ativo. process_mode=ALWAYS.
+- Thrust wav importado com loop_mode=1 (forward).
+- TODO: conectar SFX de pickup/crash/vitória/game over quando os arquivos chegarem (ver Notion "Sons a Produzir").
 
 ## 2026-07-03 — Chão sólido + fase maior
 - Adicionado `Ground` (StaticBody2D + WorldBoundaryShape2D) em main.tscn, y=974 → foguete não passa do chão, começa pousado.

@@ -29,6 +29,7 @@ Ver `game_events.gd`. **Não mude assinatura sem avisar** — quebra todo mundo.
 | Signal | Quem emite | Quem escuta |
 |--------|-----------|-------------|
 | `fuel_changed(current, maximum)` | Player | HUD |
+| `thrust_changed(active)` | Player | AudioManager (som do motor) |
 | `fuel_collected(amount)` | Fuel pickup | Player |
 | `asteroid_hit` | Asteroid | Player |
 | `player_died` | Player | GameManager |

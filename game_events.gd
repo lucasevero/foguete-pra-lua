@@ -11,6 +11,9 @@ signal altitude_changed(ratio: float)                 # 0.0 = Terra, 1.0 = Lua. 
 signal player_died                                    # GameManager escuta
 signal player_reached_moon                            # GameManager escuta
 
+# --- Player -> áudio ---
+signal thrust_changed(active: bool)                   # AudioManager escuta (liga/desliga som do motor)
+
 # --- Pickups / obstáculos -> Player ---
 signal fuel_collected(amount: float)                  # Player escuta, adiciona combustível
 signal asteroid_hit                                   # Player escuta, morre

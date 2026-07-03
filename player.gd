@@ -24,6 +24,7 @@ extends CharacterBody2D
 var fuel: float
 var angular_velocity: float = 0.0
 var _has_taken_off: bool = false
+var _thrusting: bool = false
 
 func _ready() -> void:
 	fuel = max_fuel
@@ -42,7 +43,11 @@ func _physics_process(delta: float) -> void:
 
 	# --- Toque/clique: empurra pra longe do ponto tocado + rotaciona ---
 	# Polling do estado a cada frame (robusto; no mobile o toque emula o mouse).
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and fuel > 0.0:
+	var thrusting := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and fuel > 0.0
+	if thrusting != _thrusting:
+		_thrusting = thrusting
+		GameEvents.thrust_changed.emit(thrusting)   # AudioManager liga/desliga o motor
+	if thrusting:
 		var vp := get_viewport()
 		var center := vp.get_visible_rect().size * 0.5
 		var touch := vp.get_mouse_position()
