@@ -12,6 +12,20 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 - Fluxo: Loja emite `powerup_purchase_requested` → GameManager valida/debita/emite `powerup_activated` → Player aplica shield/fuel/weapon, GameManager aplica time.
 - Adicionados CoinSpawner + Shop em main.tscn.
 
+## 2026-07-03 — Game over: botão MENU PRINCIPAL
+- ⚠️ CONTRATO: +1 signal `menu_requested` (UI game over "MENU" → GameManager + AudioManager). **Avisem o time (git pull).**
+- `ui.tscn`/`ui.gd`: 2º botão **MENU PRINCIPAL** no game over (empilhado sob o REINICIAR). REINICIAR = replay instantâneo; MENU = volta pro menu inicial.
+- `game_manager.gd`: `_on_menu_requested` zera `_has_started_once` e `reload_current_scene()` → cai no menu (não faz replay).
+- `audio_manager.gd`: para a música no `menu_requested` (menu inicial é silencioso; volta no próximo JOGAR).
+- Validado: game over mostra os 2 botões; após "MENU", cena recriada com `running=false` + menu visível (MENU_RETURN_OK).
+
+## 2026-07-03 — Fase 7: menu inicial + estados + indicador de inclinação
+- ⚠️ CONTRATO: +2 signals aditivos em `game_events.gd` (+ `CONTRACT.md`): `start_requested` (UI menu "JOGAR" → GameManager) e `tilt_changed(radians)` (GameManager → HUD). Não mudam nada existente, mas **avisem o time (git pull)**.
+- **Menu inicial** (`ui.tscn`/`ui.gd`): overlay com título, história, dica de controle (onboarding), botões JOGAR/CRÉDITOS/SAIR (arte pixel) + painel de créditos. HUD e indicador só aparecem em `game_started`.
+- **Máquina de estados** (`game_manager.gd`): começa pausado no MENU; `start_requested` inicia (`_begin`). `static var _has_started_once` sobrevive ao `reload_current_scene()` → REINICIAR faz **replay instantâneo** (pula o menu). Validado: BOOT=menu, JOGAR=jogando, recriar cena=jogando (REPLAY_OK).
+- **Indicador de inclinação** no HUD (top-dir): seta `tilt_arrow.png` gira com `player.rotation` (GameManager lê e emite `tilt_changed`), verde no prumo → vermelho inclinado. Cobre o "HUD: indicador de inclinação?" da Fase 7.
+- Fase 7 restante NÃO feita: **"aviso de quase batendo"** precisa de proximidade dos asteroides (área **obstacles**) — deixei pro dono da área emitir um signal.
+
 ## 2026-07-03 — SFX de estados/UI integrados
 - win (`game_over(true)`), game_over (`game_over(false)`), ui_click (botão REINICIAR via `AudioManager.play_ui_click()` chamado em `ui.gd`). Todos 8-bit gerados.
 - `phone_ring.wav` adicionado em assets/audio/sfx/ mas NÃO plugado — é da cutscene (área Dev D). Deixado pro dono da cutscene tocar (evita conflito na área ativa dele).

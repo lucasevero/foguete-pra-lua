@@ -42,8 +42,11 @@ Ver `game_events.gd`. **Não mude assinatura sem avisar** — quebra todo mundo.
 | `player_reached_moon` | GameManager | GameManager |
 | `altitude_changed(ratio)` | GameManager | Background (0=Terra, 1=Lua) |
 | `time_changed(seconds_left)` | GameManager | HUD |
+| `tilt_changed(radians)` | GameManager | HUD (indicador de inclinação) |
 | `game_started` | GameManager | (livre) |
 | `game_over(won)` | GameManager | HUD |
+| `start_requested` | UI (menu "JOGAR") | GameManager |
+| `menu_requested` | UI (game over "MENU") | GameManager + AudioManager |
 
 ## Controles (protótipo)
 

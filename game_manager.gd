@@ -1,12 +1,17 @@
 extends Node
 ## DONO: Dev D — orquestra o jogo. Único que conhece o "todo".
-## Calcula altitude (Terra->Lua), tempo, e decide vitória/derrota.
+## Estados: MENU (pausado) → JOGANDO → GAME OVER. Calcula altitude (Terra→Lua),
+## tempo, inclinação e decide vitória/derrota.
 
 @export var moon_altitude_offset: float = -10000.0  # sobe = y negativo. Lua fica X px acima do início
 @export var time_limit: float = 180.0
 @export var time_extra_powerup: float = 15.0        # +tempo do powerup
 
 const PRICES := {"time": 5, "shield": 10, "fuel": 15, "weapon": 25}
+
+## Pertence à CLASSE (não à instância), então SOBREVIVE ao reload_current_scene():
+## no 1º boot mostra o menu; depois do REINICIAR já entra jogando (replay instantâneo).
+static var _has_started_once: bool = false
 
 var player: Node2D
 var start_y: float = 0.0
@@ -20,12 +25,31 @@ func _ready() -> void:
 	GameEvents.coin_collected.connect(_on_coin_collected)
 	GameEvents.powerup_purchase_requested.connect(_on_purchase_requested)
 	GameEvents.powerup_activated.connect(_on_powerup)
+	GameEvents.start_requested.connect(_on_start_requested)
+	GameEvents.menu_requested.connect(_on_menu_requested)
 	player = get_node_or_null("../Player")
 	if player:
 		start_y = player.global_position.y
 	time_left = time_limit
+	running = false
+	get_tree().paused = true            # congela tudo; a UI mostra o menu por cima
+	if _has_started_once:
+		_begin()                        # REINICIAR: pula o menu e joga de novo na hora
+
+func _on_start_requested() -> void:    # Menu "JOGAR"
+	_has_started_once = true
+	_begin()
+
+func _on_menu_requested() -> void:     # Game over "MENU": volta pro menu inicial
+	_has_started_once = false           # zera pra NÃO fazer replay instantâneo no reload
+	get_tree().paused = false
+	get_tree().reload_current_scene()
+
+func _begin() -> void:
 	running = true
-	GameEvents.game_started.emit()
+	time_left = time_limit
+	get_tree().paused = false
+	GameEvents.game_started.emit()      # UI esconde menu / mostra HUD; AudioManager (re)inicia a música
 	GameEvents.time_changed.emit(time_left)
 	GameEvents.coins_changed.emit(coins)
 
@@ -55,6 +79,7 @@ func _process(delta: float) -> void:
 		_end(false)
 		return
 	if player:
+		GameEvents.tilt_changed.emit(player.rotation)   # HUD: indicador de inclinação
 		var moon_y := start_y + moon_altitude_offset
 		var ratio := inverse_lerp(start_y, moon_y, player.global_position.y)
 		GameEvents.altitude_changed.emit(clampf(ratio, 0.0, 1.0))

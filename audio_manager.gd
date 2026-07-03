@@ -64,6 +64,7 @@ func _ready() -> void:
 	# O autoload persiste entre reloads da cena; a música só reinicia quando o
 	# GameManager (re)emite game_started — inclusive no REINICIAR (reload_current_scene).
 	GameEvents.game_started.connect(_on_game_started)
+	GameEvents.menu_requested.connect(_on_menu_requested)
 	GameEvents.thrust_changed.connect(_on_thrust_changed)
 	GameEvents.lifted_off.connect(func(): _liftoff.play())
 	GameEvents.landed_safely.connect(func(): _land.play())
@@ -79,6 +80,10 @@ func play_ui_click() -> void:
 
 func _on_game_started() -> void:
 	_music.play(MUSIC_START)   # sempre do começo a cada (re)início de partida
+
+func _on_menu_requested() -> void:
+	_music.stop()              # menu inicial é silencioso; a música volta no próximo JOGAR
+	_thrust.stop()
 
 func _on_thrust_changed(active: bool) -> void:
 	if active:

@@ -187,9 +187,35 @@ def button(base, light, dark, pressed=False):
     return im
 
 
+# --------------------------------------------------------------------------
+# Indicador de inclinação — seta/chevron pra cima (24x24). Gira com o foguete.
+# Cor (verde/vermelho) vem do modulate no HUD conforme o ângulo.
+# --------------------------------------------------------------------------
+def tilt_arrow():
+    im = new(24, 24)
+    W = (235, 242, 255, 255)
+    WS = (150, 165, 195, 255)
+    cx = 12
+    top, bot = 4, 18
+    for y in range(top, bot + 1):
+        half = int(round((y - top) * 9.0 / (bot - top)))   # 0..9
+        if half < 1:
+            half = 1
+        rect(im, cx - half, y, cx + half - 1, y, W)
+        if half >= 3:                                        # sombra na metade direita
+            rect(im, cx + 1, y, cx + half - 1, y, WS)
+        px(im, cx - half - 1, y, INK)                        # contorno lados
+        px(im, cx + half, y, INK)
+    rect(im, cx - 9, bot + 1, cx + 8, bot + 1, INK)          # base (contorno)
+    px(im, cx, top - 1, INK)                                 # ponta
+    px(im, cx - 1, top - 1, INK)
+    return im
+
+
 if __name__ == "__main__":
     save(fuel_icon(), "fuel_icon.png")
     save(clock_icon(), "clock_icon.png")
+    save(tilt_arrow(), "tilt_arrow.png")
     save(panel(), "panel.png")
     save(gauge_frame(), "gauge_frame.png")
     save(gauge_fill(), "gauge_fill.png")

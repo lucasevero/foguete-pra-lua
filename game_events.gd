@@ -28,5 +28,10 @@ signal powerup_activated(kind: String)                # GameManager -> Player/Ga
 
 # --- Fluxo de jogo (GameManager emite) ---
 signal time_changed(seconds_left: float)              # HUD escuta
+signal tilt_changed(radians: float)                   # HUD escuta: indicador de inclinação do foguete
 signal game_started
 signal game_over(won: bool)                           # HUD escuta (true = venceu)
+
+# --- UI -> fluxo de jogo ---
+signal start_requested                                # Menu "JOGAR": pede pro GameManager iniciar a partida
+signal menu_requested                                 # Game over "MENU": volta pro menu inicial (GM recarrega; AudioManager para a música)
