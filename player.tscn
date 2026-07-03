@@ -22,6 +22,9 @@ offset_right = 6.0
 offset_bottom = -24.0
 color = Color(0.95, 0.4, 0.3, 1)
 
+[node name="Shield" type="Sprite2D" parent="."]
+z_index = 1
+
 [node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource("1")
 

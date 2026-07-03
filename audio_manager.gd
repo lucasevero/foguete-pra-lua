@@ -81,6 +81,15 @@ func _ready() -> void:
 	GameEvents.game_over.connect(_on_game_over)
 	GameEvents.coin_collected.connect(_on_coin_collected)
 
+func _notification(what: int) -> void:
+	# Silencia quando o app vai pro background / perde foco / tela desliga
+	# (web e mobile) — senão a música continua tocando fora do app.
+	match what:
+		NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+			AudioServer.set_bus_mute(0, true)
+		NOTIFICATION_APPLICATION_RESUMED, NOTIFICATION_WM_WINDOW_FOCUS_IN:
+			AudioServer.set_bus_mute(0, false)
+
 func _on_coin_collected(amount: int) -> void:
 	if amount >= 5:
 		_coin_big.play()

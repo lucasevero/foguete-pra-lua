@@ -5,6 +5,9 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Escudo com visual (círculo amarelo)
+- Nó `Shield` (Sprite2D, z=1) no player; textura gerada em código (disco amarelo translúcido, placeholder). Mostra ao ativar escudo, esconde ao absorver hit.
+
 ## 2026-07-03 — Powerups no Player: escudo + arma
 - ⚠️ CONTRATO (novos): `coin_collected`, `coins_changed`, `powerup_purchase_requested`, `powerup_activated`.
 - Player escuta `powerup_activated`: escudo (`_shield` absorve 1 asteroid_hit em vez de morrer), gasolina (enche), arma (`_weapon_time`=15s, atira `bullet.tscn` pra cima a cada 0.15s). Bullet destrói asteroides (grupo "asteroid").

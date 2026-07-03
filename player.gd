@@ -33,13 +33,28 @@ var _shield: bool = false
 var _weapon_time: float = 0.0
 var _fire_cd: float = 0.0
 
+@onready var _shield_sprite: Sprite2D = $Shield
+
 func _ready() -> void:
 	fuel = max_fuel
 	GameEvents.fuel_collected.connect(_on_fuel_collected)
 	GameEvents.asteroid_hit.connect(_on_asteroid_hit)
 	GameEvents.powerup_activated.connect(_on_powerup)
 	$ScreenNotifier.screen_exited.connect(_on_screen_exited)
+	_shield_sprite.texture = _make_shield_disc(96)   # placeholder círculo amarelo
+	_shield_sprite.hide()
 	GameEvents.fuel_changed.emit(fuel, max_fuel)
+
+func _make_shield_disc(diameter: int) -> ImageTexture:
+	var img := Image.create(diameter, diameter, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	var r := diameter / 2.0
+	var center := Vector2(r, r)
+	for y in diameter:
+		for x in diameter:
+			if Vector2(x, y).distance_to(center) <= r - 1.0:
+				img.set_pixel(x, y, Color(1.0, 1.0, 0.2, 0.35))
+	return ImageTexture.create_from_image(img)
 
 func _physics_process(delta: float) -> void:
 	# --- Auto-endireitamento (tende a apontar pra cima) + rajadas ---
@@ -103,6 +118,7 @@ func _on_fuel_collected(amount: float) -> void:
 func _on_asteroid_hit() -> void:
 	if _shield:
 		_shield = false            # escudo absorve um hit
+		_shield_sprite.hide()
 	else:
 		GameEvents.player_died.emit()
 
@@ -113,6 +129,7 @@ func _on_powerup(kind: String) -> void:
 	match kind:
 		"shield":
 			_shield = true
+			_shield_sprite.show()
 		"fuel":
 			fuel = max_fuel
 			GameEvents.fuel_changed.emit(fuel, max_fuel)

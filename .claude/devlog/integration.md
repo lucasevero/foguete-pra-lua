@@ -5,6 +5,9 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Fix: áudio continuava tocando em background
+- `audio_manager.gd` `_notification`: muta o bus master em NOTIFICATION_APPLICATION_PAUSED / WM_WINDOW_FOCUS_OUT (app em background / tela off / perde foco), desmuta em RESUMED / FOCUS_IN. Resolve música tocando fora do app (web/mobile).
+
 ## 2026-07-03 — Som de moeda (normal/grande)
 - AudioManager conecta `coin_collected(amount)`: coin.wav (normal) / coin_big.wav (amount>=5). Sons 8-bit gerados.
 
