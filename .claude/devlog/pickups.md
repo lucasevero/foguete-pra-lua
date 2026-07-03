@@ -5,6 +5,9 @@ Só o agente desta área escreve aqui. Entradas mais recentes no topo. Formato: 
 
 ---
 
+## 2026-07-03 — Nuvens: várias pequenas espalhadas
+- Clouds virou container Node2D; `_spawn_clouds` cria `cloud_count`=16 nuvens em x/y aleatórios na faixa baixa (ground_y-200 até -3200), escala 0.12-0.30, alpha variado. Fade do container por altitude (1-r*2.5). Antes era 1 nuvem centralizada.
+
 ## 2026-07-03 — Assets reais: background + galão
 - `bg_city.png` (quintal 1800x700, escala 0.4) no nó City; `bg_moon.png` (300, escala 0.9) no Moon; `bg_clouds.png` novo nó Clouds (baixa altitude, some ao subir: alpha=1-r*3.5). Removidos placeholders procedurais de city/moon (estrelas seguem procedurais até chegar bg_stars).
 - `fuel_can.png` (50x50) no fuel.tscn (era ColorRect); colisão 44x44.

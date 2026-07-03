@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://parallax_bg.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/bg_city.png" id="2"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background/bg_moon.png" id="3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/background/bg_clouds.png" id="4"]
 
 [node name="Background" type="Node2D"]
 z_index = -5
@@ -24,8 +23,7 @@ repeat_size = Vector2(256, 256)
 [node name="StarsSprite" type="Sprite2D" parent="Stars"]
 centered = false
 
-[node name="Clouds" type="Sprite2D" parent="."]
-texture = ExtResource("4")
+[node name="Clouds" type="Node2D" parent="."]
 
 [node name="City" type="Sprite2D" parent="."]
 texture = ExtResource("2")

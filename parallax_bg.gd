@@ -6,15 +6,18 @@ extends Node2D
 ## Escuta GameEvents.altitude_changed (0.0 = chão, 1.0 = Lua).
 ## Estrelas ainda são placeholder procedural (sem asset bg_stars ainda).
 
+const CLOUD_TEX := preload("res://assets/sprites/background/bg_clouds.png")
+
 @export var earth_sky: Color = Color(0.53, 0.81, 0.92)
 @export var deep_space: Color = Color(0.02, 0.02, 0.08)
 @export var ground_y: float = 950.0    # chão/cidade no início (casar com player start ~950)
 @export var moon_y: float = -9050.0    # deve casar com moon de game_manager (start 950 + offset -10000)
+@export var cloud_count: int = 16      # nuvens pequenas espalhadas pela zona baixa
 
 @onready var sky_rect: ColorRect = $SkyLayer/SkyRect
 @onready var stars: Parallax2D = $Stars
 @onready var stars_sprite: Sprite2D = $Stars/StarsSprite
-@onready var clouds: Sprite2D = $Clouds
+@onready var clouds: Node2D = $Clouds
 @onready var city: Sprite2D = $City
 @onready var moon: Sprite2D = $Moon
 
@@ -29,16 +32,26 @@ func _ready() -> void:
 	city.position = Vector2(360, ground_y)
 	moon.scale = Vector2(0.9, 0.9)
 	moon.position = Vector2(360, moon_y)
-	clouds.scale = Vector2(0.7, 0.7)
-	clouds.position = Vector2(360, ground_y - 700)  # camada baixa, acima do quintal
+	_spawn_clouds()
 
 	_on_altitude_changed(0.0)
+
+func _spawn_clouds() -> void:
+	# várias nuvens pequenas espalhadas pela zona baixa (não uma só no centro)
+	for i in cloud_count:
+		var c := Sprite2D.new()
+		c.texture = CLOUD_TEX
+		var s := randf_range(0.12, 0.30)
+		c.scale = Vector2(s, s)
+		c.position = Vector2(randf() * 720.0, ground_y - randf_range(200.0, 3200.0))
+		c.modulate.a = randf_range(0.7, 1.0)
+		clouds.add_child(c)
 
 func _on_altitude_changed(ratio: float) -> void:
 	var r := clampf(ratio, 0.0, 1.0)
 	sky_rect.color = earth_sky.lerp(deep_space, r)
 	stars_sprite.modulate.a = r                        # estrelas surgem no espaço
-	clouds.modulate.a = clampf(1.0 - r * 3.5, 0.0, 1.0) # nuvens só perto do chão
+	clouds.modulate.a = clampf(1.0 - r * 2.5, 0.0, 1.0) # nuvens só na faixa baixa
 
 # --- Placeholder procedural das estrelas (trocar quando chegar bg_stars) ---
 
