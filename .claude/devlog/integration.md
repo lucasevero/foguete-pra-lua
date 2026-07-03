@@ -41,6 +41,54 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 - Pixel art: `default_texture_filter=0` (nearest, sem borrão).
 - `assets/` estruturado por área; `serve_web.py` + preset Web commitados p/ testar no celular.
 
+## 2026-07-03 — redesign portrait/mobile da cutscene (tela de chamada)
+
+Redesenhado o `CutscenePlayer` de "diálogo com retratos esq/dir em paisagem"
+para uma **tela de chamada estilo celular**, pensada pro jogo já ser
+portrait/mobile: **recebendo chamada** (nome de quem liga + "chamando…" +
+botão Atender) → **em chamada** (avatar do falante que troca conforme a fala,
+timer de duração contando, legenda com efeito typewriter) → desliga e corta
+pro `main.tscn`.
+
+**Input agora é touch-first:** tocar em qualquer lugar da tela atende a
+chamada e depois avança/completa a linha atual; há botões explícitos
+**Atender** e **Pular** na UI. `ui_accept`/`ui_cancel` (Espaço/ESC) continuam
+funcionando como atalho desktop, mas não são mais o fluxo principal.
+
+**Isso resolve** o item "adaptar layout p/ portrait" que tinha ficado
+**PENDENTE** na entrada anterior (ver abaixo, "Pós-rebase na Fase 2") — o
+`cutscene_player.tscn` foi refeito do zero para caber em 720×1280.
+
+**Arquivos alterados (só estes três):**
+- `cutscene_player.gd`
+- `cutscene_player.tscn`
+- `tests/test_cutscene_player.gd`
+
+`cutscene_beat.gd`, `cutscene_intro.gd` (dados/sequência de beats) e o
+contrato `GameEvents`/`CONTRACT.md` **não foram tocados** — a cutscene
+continua sendo uma cena isolada, sem emitir/escutar signals do jogo.
+
+**Verificação headless (suíte completa, todas passaram):**
+1. `--headless --import --quit` → grep de erro/parse vazio.
+2. `--headless --script res://tests/test_cutscene_data.gd` → `TEST_OK`.
+3. `--headless --script res://tests/test_cutscene_player.gd` → `TEST_OK`.
+4. `--headless res://intro.tscn --quit-after 120` → grep
+   `SCRIPT ERROR|nil|invalid` vazio (a cena fica parada no beat de chamada
+   esperando input, esperado headless).
+5. `--headless res://main.tscn --quit-after 120` → grep vazio.
+
+**Pendente:** playtest manual no editor (F5) — **interativo, precisa de um
+humano** com toque/mouse/teclado e display; não dá pra rodar headless.
+Checklist:
+- Recebe chamada ("CARLOS" + "chamando…") com botão Atender; tocar em
+  qualquer lugar também atende.
+- Em chamada: avatar do falante troca (Carlos/Você/Gus), timer conta,
+  legenda com typewriter; tocar avança/completa a linha.
+- Botão Pular encerra a cutscene a qualquer momento.
+- Legenda final "Missão de resgate iniciada." (fundo azul) → entra no
+  `main.tscn`.
+- Layout cabe bem em 720×1280 (nada cortado/fora da tela).
+
 ## 2026-07-03 — cutscene de abertura (CENA 1) + CutscenePlayer reutilizável
 
 Adicionada a cutscene de abertura: a ligação do Carlos avisando que ele e o Gus
