@@ -15,11 +15,11 @@ func _ready() -> void:
 
 	_music = AudioStreamPlayer.new()
 	_music.stream = MUSIC_THEME
-	_music.volume_db = -8.0
+	_music.volume_db = -6.0   # +25% de volume vs -8 dB (linear)
 	if _music.stream is AudioStreamMP3:
 		_music.stream.loop = true
 	add_child(_music)
-	_music.play()
+	_music.play(10.0)         # começa aos 10s da faixa
 
 	_thrust = AudioStreamPlayer.new()
 	_thrust.stream = SFX_THRUST
