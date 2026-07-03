@@ -1,8 +1,10 @@
 # Godot 4+
 .godot/
 /android/
-export_presets.cfg
 *.translation
+
+# Build output do export web (grande, regerável)
+build/
 
 # Claude Code — per-user local settings (shared context IS committed)
 .claude/settings.local.json

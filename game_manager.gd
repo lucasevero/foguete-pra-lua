@@ -23,8 +23,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if not running:
-		if Input.is_key_pressed(KEY_R):        # reiniciar após game over / vitória
-			get_tree().reload_current_scene()
 		return
 	time_left -= delta
 	GameEvents.time_changed.emit(time_left)
@@ -49,5 +47,5 @@ func _end(won: bool) -> void:
 	if not running:
 		return
 	running = false
-	GameEvents.game_over.emit(won)
-	# TODO(Dev D): pausar spawners, mostrar restart. get_tree().paused = true ?
+	GameEvents.game_over.emit(won)   # UI mostra o botão REINICIAR (process_mode=ALWAYS)
+	get_tree().paused = true         # congela o jogo (player, spawners, asteroides)
