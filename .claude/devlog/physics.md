@@ -5,6 +5,11 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Powerups no Player: escudo + arma
+- ⚠️ CONTRATO (novos): `coin_collected`, `coins_changed`, `powerup_purchase_requested`, `powerup_activated`.
+- Player escuta `powerup_activated`: escudo (`_shield` absorve 1 asteroid_hit em vez de morrer), gasolina (enche), arma (`_weapon_time`=15s, atira `bullet.tscn` pra cima a cada 0.15s). Bullet destrói asteroides (grupo "asteroid").
+- bullet.gd/.tscn novos (Area2D). asteroid.tscn entrou no grupo "asteroid".
+
 ## 2026-07-03 — Emite thrust_changed / lifted_off / landed_safely (áudio)
 - ⚠️ CONTRATO: Player emite `thrust_changed(active)` (virada do empuxo), `lifted_off` (sai do chão 1ª vez), `landed_safely` (pouso suave). AudioManager usa p/ SFX.
 

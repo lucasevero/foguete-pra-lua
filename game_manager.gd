@@ -4,15 +4,22 @@ extends Node
 
 @export var moon_altitude_offset: float = -10000.0  # sobe = y negativo. Lua fica X px acima do início
 @export var time_limit: float = 180.0
+@export var time_extra_powerup: float = 15.0        # +tempo do powerup
+
+const PRICES := {"time": 5, "shield": 10, "fuel": 15, "weapon": 25}
 
 var player: Node2D
 var start_y: float = 0.0
 var time_left: float
 var running: bool = false
+var coins: int = 0                                  # moedas da corrida (zeram no restart)
 
 func _ready() -> void:
 	GameEvents.player_died.connect(_on_player_died)
 	GameEvents.player_reached_moon.connect(_on_reached_moon)
+	GameEvents.coin_collected.connect(_on_coin_collected)
+	GameEvents.powerup_purchase_requested.connect(_on_purchase_requested)
+	GameEvents.powerup_activated.connect(_on_powerup)
 	player = get_node_or_null("../Player")
 	if player:
 		start_y = player.global_position.y
@@ -20,6 +27,23 @@ func _ready() -> void:
 	running = true
 	GameEvents.game_started.emit()
 	GameEvents.time_changed.emit(time_left)
+	GameEvents.coins_changed.emit(coins)
+
+func _on_coin_collected(amount: int) -> void:
+	coins += amount
+	GameEvents.coins_changed.emit(coins)
+
+func _on_purchase_requested(kind: String) -> void:
+	var price: int = PRICES.get(kind, 0)
+	if coins >= price:
+		coins -= price
+		GameEvents.coins_changed.emit(coins)
+		GameEvents.powerup_activated.emit(kind)   # Player aplica; _on_powerup trata "time"
+
+func _on_powerup(kind: String) -> void:
+	if kind == "time":
+		time_left += time_extra_powerup
+		GameEvents.time_changed.emit(time_left)
 
 func _process(delta: float) -> void:
 	if not running:

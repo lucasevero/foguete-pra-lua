@@ -1,0 +1,72 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://shop.gd" id="1"]
+
+[node name="Shop" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1")
+
+[node name="CoinLabel" type="Label" parent="."]
+offset_left = 440.0
+offset_top = 20.0
+offset_right = 704.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 26
+text = "Moedas: 0"
+horizontal_alignment = 2
+
+[node name="ShopButton" type="Button" parent="."]
+offset_left = 560.0
+offset_top = 1150.0
+offset_right = 704.0
+offset_bottom = 1230.0
+theme_override_font_sizes/font_size = 24
+text = "LOJA"
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 90.0
+offset_top = 320.0
+offset_right = 630.0
+offset_bottom = 960.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 516.0
+offset_bottom = 616.0
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+theme_override_font_sizes/font_size = 32
+text = "LOJA DE POWERUPS"
+horizontal_alignment = 1
+
+[node name="Balance" type="Label" parent="Panel/VBox"]
+theme_override_font_sizes/font_size = 24
+text = "Moedas: 0"
+horizontal_alignment = 1
+
+[node name="BuyTime" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 64)
+theme_override_font_sizes/font_size = 24
+text = "Tempo +15s   (5)"
+
+[node name="BuyShield" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 64)
+theme_override_font_sizes/font_size = 24
+text = "Escudo (1 hit)   (10)"
+
+[node name="BuyFuel" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 64)
+theme_override_font_sizes/font_size = 24
+text = "Gasolina cheia   (15)"
+
+[node name="BuyWeapon" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 64)
+theme_override_font_sizes/font_size = 24
+text = "Arma 15s   (25)"
+
+[node name="Close" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 56)
+theme_override_font_sizes/font_size = 24
+text = "Fechar"

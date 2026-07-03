@@ -5,6 +5,10 @@ Só o agente desta área escreve aqui. Entradas mais recentes no topo. Formato: 
 
 ---
 
+## 2026-07-03 — Moedas coletáveis
+- `coin.gd`/`coin.tscn` (Area2D dourado) + `coin_spawner.gd` (por distância, ~160px, mais frequente que combustível). Emite `coin_collected`.
+- Adicionado CoinSpawner em main.tscn. Sprite placeholder (troca por pixel art depois).
+
 ## 2026-07-03 — Background: chão vira CIDADE (São Paulo)
 - Marco de baixo trocado de planeta (bola) p/ **cidade**: nó `City` (era `Earth`), skyline placeholder procedural (`_make_city`: prédios + janelas). Sprite real: `bg_city.png`. `earth_y` → `ground_y`. Lua segue bola (destino no espaço).
 - Notion "Sprites a Gerar" atualizado (Terra → Cidade São Paulo).

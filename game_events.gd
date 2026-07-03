@@ -18,7 +18,13 @@ signal landed_safely                                  # AudioManager: som de pou
 
 # --- Pickups / obstáculos -> Player ---
 signal fuel_collected(amount: float)                  # Player escuta, adiciona combustível
-signal asteroid_hit                                   # Player escuta, morre
+signal asteroid_hit                                   # Player escuta, morre (ou escudo absorve)
+
+# --- Moedas / loja ---
+signal coin_collected(amount: int)                    # Coin -> GameManager
+signal coins_changed(total: int)                      # GameManager -> HUD/Loja
+signal powerup_purchase_requested(kind: String)       # Loja -> GameManager (valida preço, debita moedas)
+signal powerup_activated(kind: String)                # GameManager -> Player/GameManager ("time"|"shield"|"fuel"|"weapon")
 
 # --- Fluxo de jogo (GameManager emite) ---
 signal time_changed(seconds_left: float)              # HUD escuta

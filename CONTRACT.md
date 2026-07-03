@@ -33,7 +33,11 @@ Ver `game_events.gd`. **Não mude assinatura sem avisar** — quebra todo mundo.
 | `lifted_off` | Player | AudioManager (som de decolagem) |
 | `landed_safely` | Player | AudioManager (som de pouso suave) |
 | `fuel_collected(amount)` | Fuel pickup | Player |
-| `asteroid_hit` | Asteroid | Player |
+| `asteroid_hit` | Asteroid | Player (escudo absorve ou morre) |
+| `coin_collected(amount)` | Coin | GameManager |
+| `coins_changed(total)` | GameManager | Loja/HUD moedas |
+| `powerup_purchase_requested(kind)` | Loja | GameManager (valida preço, debita) |
+| `powerup_activated(kind)` | GameManager | Player (shield/fuel/weapon) + GameManager (time) |
 | `player_died` | Player | GameManager |
 | `player_reached_moon` | GameManager | GameManager |
 | `altitude_changed(ratio)` | GameManager | Background (0=Terra, 1=Lua) |

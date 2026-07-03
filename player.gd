@@ -20,16 +20,24 @@ extends CharacterBody2D
 @export var max_fuel: float = 100.0
 @export var fuel_burn_rate: float = 10.0    # combustível/s enquanto empurra
 @export var safe_land_speed: float = 250.0  # descida máx p/ pouso seguro; acima disso = crash
+@export var weapon_duration: float = 15.0   # duração do powerup arma
+@export var fire_interval: float = 0.15      # intervalo entre tiros
+
+const BULLET := preload("res://bullet.tscn")
 
 var fuel: float
 var angular_velocity: float = 0.0
 var _has_taken_off: bool = false
 var _thrusting: bool = false
+var _shield: bool = false
+var _weapon_time: float = 0.0
+var _fire_cd: float = 0.0
 
 func _ready() -> void:
 	fuel = max_fuel
 	GameEvents.fuel_collected.connect(_on_fuel_collected)
 	GameEvents.asteroid_hit.connect(_on_asteroid_hit)
+	GameEvents.powerup_activated.connect(_on_powerup)
 	$ScreenNotifier.screen_exited.connect(_on_screen_exited)
 	GameEvents.fuel_changed.emit(fuel, max_fuel)
 
@@ -59,6 +67,14 @@ func _physics_process(delta: float) -> void:
 		fuel = maxf(0.0, fuel - fuel_burn_rate * delta)
 		GameEvents.fuel_changed.emit(fuel, max_fuel)
 
+	# --- Arma (powerup): tiro contínuo pra cima por 15s ---
+	if _weapon_time > 0.0:
+		_weapon_time -= delta
+		_fire_cd -= delta
+		if _fire_cd <= 0.0:
+			_fire_cd = fire_interval
+			_fire()
+
 	# --- Amortecimentos ---
 	angular_velocity -= angular_velocity * angular_drag * delta
 	rotation += angular_velocity * delta
@@ -85,7 +101,27 @@ func _on_fuel_collected(amount: float) -> void:
 	GameEvents.fuel_changed.emit(fuel, max_fuel)
 
 func _on_asteroid_hit() -> void:
-	GameEvents.player_died.emit()
+	if _shield:
+		_shield = false            # escudo absorve um hit
+	else:
+		GameEvents.player_died.emit()
 
 func _on_screen_exited() -> void:  # saiu da tela de jogo = game over
 	GameEvents.player_died.emit()
+
+func _on_powerup(kind: String) -> void:
+	match kind:
+		"shield":
+			_shield = true
+		"fuel":
+			fuel = max_fuel
+			GameEvents.fuel_changed.emit(fuel, max_fuel)
+		"weapon":
+			_weapon_time = weapon_duration
+			_fire_cd = 0.0
+		# "time" é tratado pelo GameManager
+
+func _fire() -> void:
+	var b := BULLET.instantiate()
+	get_parent().add_child(b)
+	b.global_position = global_position + Vector2.UP.rotated(rotation) * 40.0

@@ -5,6 +5,13 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Moedas + Loja de powerups
+- ⚠️ CONTRATO (novos): `coin_collected`, `coins_changed`, `powerup_purchase_requested`, `powerup_activated`. CONTRACT.md atualizado.
+- `shop.gd`/`shop.tscn` (CanvasLayer process_mode=ALWAYS, cena NOVA p/ não conflitar com ui.tscn do Dev D): contador de moedas (canto sup. dir.) + botão LOJA (canto inf. dir.) que pausa e abre painel com 4 powerups. Botões desabilitam se não tem moeda.
+- GameManager: rastreia `coins` (zeram no restart), `PRICES` {time:5,shield:10,fuel:15,weapon:25}, valida compra em `_on_purchase_requested` (debita + emite `powerup_activated`), aplica "time" (+15s).
+- Fluxo: Loja emite `powerup_purchase_requested` → GameManager valida/debita/emite `powerup_activated` → Player aplica shield/fuel/weapon, GameManager aplica time.
+- Adicionados CoinSpawner + Shop em main.tscn.
+
 ## 2026-07-03 — SFX de estados/UI integrados
 - win (`game_over(true)`), game_over (`game_over(false)`), ui_click (botão REINICIAR via `AudioManager.play_ui_click()` chamado em `ui.gd`). Todos 8-bit gerados.
 - `phone_ring.wav` adicionado em assets/audio/sfx/ mas NÃO plugado — é da cutscene (área Dev D). Deixado pro dono da cutscene tocar (evita conflito na área ativa dele).

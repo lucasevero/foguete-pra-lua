@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="PackedScene" path="res://parallax_bg.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://player.tscn" id="2"]
@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" path="res://fuel.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://ui.tscn" id="7"]
 [ext_resource type="Script" path="res://game_manager.gd" id="8"]
+[ext_resource type="Script" path="res://coin_spawner.gd" id="9"]
+[ext_resource type="PackedScene" path="res://coin.tscn" id="10"]
+[ext_resource type="PackedScene" path="res://shop.tscn" id="11"]
 
 [sub_resource type="WorldBoundaryShape2D" id="floor"]
 
@@ -32,7 +35,13 @@ asteroid_scene = ExtResource("4")
 script = ExtResource("5")
 fuel_scene = ExtResource("6")
 
+[node name="CoinSpawner" type="Node2D" parent="."]
+script = ExtResource("9")
+coin_scene = ExtResource("10")
+
 [node name="UI" parent="." instance=ExtResource("7")]
+
+[node name="Shop" parent="." instance=ExtResource("11")]
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource("8")
