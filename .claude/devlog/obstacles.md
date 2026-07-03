@@ -5,6 +5,13 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Meteoros só no céu escuro + dificuldade por tempo
+- (implementado pela squad de integração a pedido do humano — era o `TODO(Dev B)` do spawner.)
+- `asteroid_spawner.gd`: passa a escutar `altitude_changed` (0=chão claro, 1=Lua) e `game_started`. **NÃO spawna enquanto o céu está claro** (`ratio < dark_start_ratio`=0.30); começa quando o céu escurece.
+- Spawn por **TEMPO** (não mais por distância): intervalo cai de `base_interval`=2.2s → `min_interval`=0.35s ao longo de `ramp_time`=90s → mais meteoros conforme o tempo passa.
+- **Tamanho progressivo**: `_pick_variant(diff)` pondera pequeno (domina cedo) → médio → grande (quadrático, só bem mais tarde). Validado headless: céu claro=0 spawns; cedo=só pequenos; tarde=maioria grande.
+- Sem mudança de contrato (só escuta signals existentes). Tudo `@export` → tunável.
+
 ## 2026-07-03 — 3 tamanhos de asteroide + pixel art
 - asteroid.tscn: ColorRect → Sprite2D + CircleShape base radius 45. Grupo "asteroid" mantido.
 - asteroid_spawner: `VARIANTS` sorteia textura+escala: asteroid_01 (0.5, pequeno), asteroid_02 (0.7, médio), asteroid_03 (1.0, grande). Escala o nó → colisão escala junto.
