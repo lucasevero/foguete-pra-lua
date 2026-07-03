@@ -41,6 +41,76 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 - Pixel art: `default_texture_filter=0` (nearest, sem borrão).
 - `assets/` estruturado por área; `serve_web.py` + preset Web commitados p/ testar no celular.
 
+## 2026-07-03 — cutscene de abertura (CENA 1) + CutscenePlayer reutilizável
+
+Adicionada a cutscene de abertura: a ligação do Carlos avisando que ele e o Gus
+estão presos na Lua, que roda antes do gameplay começar.
+
+**Arquivos novos:**
+- `cutscene_beat.gd` — modelo de dados de um "beat" de cutscene (fala, retrato,
+  lado, background, sfx etc).
+- `cutscene_intro.gd` — `CutsceneIntro.build()`, a sequência de beats da CENA 1
+  (tela de ligação preta → diálogo Carlos → Você → Carlos → Gus → Carlos →
+  legenda "Missão de resgate iniciada." sobre fundo azul-céu).
+- `cutscene_player.gd` / `cutscene_player.tscn` — player genérico e
+  reutilizável: consome uma lista de beats, faz o typewriter do texto, mostra
+  retratos placeholder coloridos esq/dir, avança com Espaço (Espaço também
+  completa a linha na hora durante o typewriter) e permite pular tudo com ESC.
+  Não depende de nenhum dado específico da CENA 1 — pode tocar qualquer
+  sequência de beats.
+- `intro.gd` / `intro.tscn` — cena fina que instancia o `CutscenePlayer` com
+  `CutsceneIntro.build()` e, ao terminar (fim natural ou ESC), chama
+  `change_scene_to_file("res://main.tscn")`.
+- `tests/test_cutscene_data.gd` — valida a estrutura dos beats gerados por
+  `CutsceneIntro.build()`.
+- `tests/test_cutscene_player.gd` — valida o comportamento do `CutscenePlayer`
+  (avanço, typewriter, skip).
+
+**Verificação headless (suíte completa, todas passaram):**
+1. `--headless --import --quit` → grep de erro/parse vazio.
+2. `--headless --script res://tests/test_cutscene_data.gd` → `TEST_OK`.
+3. `--headless --script res://tests/test_cutscene_player.gd` → `TEST_OK`.
+4. `--headless res://intro.tscn --quit-after 120` → grep `SCRIPT ERROR|nil|invalid`
+   vazio (a cena fica parada no beat de ligação esperando input, o que é
+   esperado headless).
+5. `--headless res://main.tscn --quit-after 120` → grep vazio.
+
+**⚠️ Aviso ao time — mudança em `project.godot`:**
+`run/main_scene` agora aponta para `res://intro.tscn` (antes era `main.tscn`).
+Isso significa que **F5 / rodar o projeto agora abre a cutscene de abertura
+primeiro**, e só entra no `main.tscn` depois que a cutscene termina (fim
+natural ou ESC). Para testar só o gameplay, usem **F6 (Run Current Scene)**
+com `main.tscn` aberto, ou rodem `--headless res://main.tscn` direto — o
+`main.tscn` continua funcionando normalmente sozinho, nada mudou nele.
+
+**Contrato `GameEvents`:** inalterado. Nenhuma edição em `CONTRACT.md` ou
+`game_events.gd` foi necessária — a cutscene não emite nem escuta nenhum
+signal do jogo, é uma cena isolada que só troca de cena no final.
+
+**⚠️ Pós-rebase na Fase 2 (mobile/portrait):** o layout do `cutscene_player.tscn`
+foi feito para **1152×648 paisagem**; com o jogo agora em **720×1280 portrait**,
+os offsets/âncoras dos retratos e da caixa de diálogo precisam ser adaptados
+para retrato. A lógica (typewriter/avançar/pular/transição) segue válida — é só
+reposicionamento de UI. **Pendente.** No mobile/touch, o "pular" via ESC também
+não existe — avaliar um botão/skip por toque.
+
+**Pendente:** checklist de verificação manual no editor (F5, playtest humano)
+ainda não foi executado — precisa de um humano rodando o editor
+interativamente (apertando Espaço/ESC, observando o typewriter e a transição).
+Itens do checklist (ver `.superpowers/sdd/task-4-brief.md`, Step 2):
+- Abre na tela de ligação ("CARLOS chamando…") em fundo preto.
+- Espaço avança; durante o typewriter, Espaço completa a linha na hora.
+- Diálogo passa por Carlos → Você → Carlos → Gus → Carlos com retratos
+  placeholder coloridos (esq/dir).
+- ESC pula a cutscene a qualquer momento.
+- No fim aparece a legenda "Missão de resgate iniciada." sobre fundo
+  azul-céu e, após ~2.5s, entra no `main.tscn` e o gameplay começa normal.
+
+**Próximo passo natural:** CENA 2 (final), reaproveitando o mesmo
+`CutscenePlayer` com uma nova lista de beats, disparada quando
+`GameEvents.game_over(won == true)` — reforça o final agridoce (o nosso
+foguete também não volta).
+
 ## 2026-07-03 — Fase 2: mobile + restart
 - `project.godot`: viewport **720×1280 portrait** + orientação handheld + stretch canvas_items/keep (decisão: jogo é mobile).
 - `game_manager.gd`: **R reinicia** (reload_current_scene) na tela de game over/vitória.
