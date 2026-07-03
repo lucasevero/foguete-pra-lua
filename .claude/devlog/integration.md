@@ -5,6 +5,10 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Música reinicia ao reiniciar o jogo
+- `audio_manager.gd`: o tema agora reinicia (play a partir de `MUSIC_START`=10s) a cada `game_started`, em vez de tocar eternamente através do reload. O autoload persiste no `reload_current_scene()`, então a música só reinicia via signal; `GameManager` já reemite `game_started` no restart.
+- Sem mudança de contrato (`game_started` já existia e já era emitido). Validado: emitir `game_started` 2× → posição da faixa volta de ~10.6s para ~10.0s.
+
 ## 2026-07-03 — UI art do HUD (Fase 5 · Arte)
 - HUD de texto → **arte pixel**: painel (NinePatchRect), ícone de jerry can + `TextureProgressBar` de combustível, ícone de relógio + tempo, botão REINICIAR estilizado (StyleBoxTexture normal/pressed).
 - Assets novos em `assets/ui/` (panel, fuel_icon, clock_icon, gauge_frame/fill, button_normal/pressed) gerados por `assets/ui/generate_ui_art.py` (pixel art procedural, reproduzível, paleta única espaço-retrô).
