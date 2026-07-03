@@ -22,10 +22,12 @@ stretch_mode = 6
 [node name="SceneArt" type="TextureRect" parent="."]
 visible = false
 mouse_filter = 2
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -720.0
 expand_mode = 1
-stretch_mode = 5
+stretch_mode = 0
 
 [node name="Scene" type="Control" parent="."]
 mouse_filter = 2
