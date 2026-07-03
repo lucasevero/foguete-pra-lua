@@ -12,6 +12,10 @@ const SFX_CRASH_ASTEROID := preload("res://assets/audio/sfx/crash_asteroid.wav")
 const SFX_CRASH_GROUND := preload("res://assets/audio/sfx/crash_ground.wav")
 const SFX_LAND := preload("res://assets/audio/sfx/land_soft.wav")
 const SFX_ALARM := preload("res://assets/audio/sfx/fuel_low.wav")
+const SFX_WIN := preload("res://assets/audio/sfx/win.wav")
+const SFX_GAME_OVER := preload("res://assets/audio/sfx/game_over.wav")
+const SFX_UI_CLICK := preload("res://assets/audio/sfx/ui_click.wav")
+# phone_ring.wav existe em assets/audio/sfx/ — a ser tocado pela cutscene (área Dev D)
 
 const MUSIC_START := 10.0   # a faixa começa/reinicia aos 10s
 const FUEL_LOW_RATIO := 0.25
@@ -24,6 +28,9 @@ var _crash_ast: AudioStreamPlayer
 var _crash_gnd: AudioStreamPlayer
 var _land: AudioStreamPlayer
 var _alarm: AudioStreamPlayer
+var _win: AudioStreamPlayer
+var _game_over: AudioStreamPlayer
+var _ui_click: AudioStreamPlayer
 
 var _fuel_low: bool = false
 var _skip_ground_crash: bool = false   # evita som duplo quando morre por asteroide
@@ -50,6 +57,9 @@ func _ready() -> void:
 	_crash_gnd = _make(SFX_CRASH_GROUND, 0.0)
 	_land = _make(SFX_LAND, -4.0)
 	_alarm = _make(SFX_ALARM, -4.0)
+	_win = _make(SFX_WIN, -2.0)
+	_game_over = _make(SFX_GAME_OVER, -2.0)
+	_ui_click = _make(SFX_UI_CLICK, -4.0)
 
 	# O autoload persiste entre reloads da cena; a música só reinicia quando o
 	# GameManager (re)emite game_started — inclusive no REINICIAR (reload_current_scene).
@@ -62,7 +72,10 @@ func _ready() -> void:
 	GameEvents.player_died.connect(_on_player_died)
 	GameEvents.fuel_changed.connect(_on_fuel_changed)
 	GameEvents.game_over.connect(_on_game_over)
-	# TODO: SFX de vitória / game over (win.wav, game_over.wav) quando chegarem.
+
+## Toca o clique de UI. Chamado por botões (ex: REINICIAR) — AudioManager é serviço global.
+func play_ui_click() -> void:
+	_ui_click.play()
 
 func _on_game_started() -> void:
 	_music.play(MUSIC_START)   # sempre do começo a cada (re)início de partida
@@ -92,5 +105,9 @@ func _on_fuel_changed(current: float, maximum: float) -> void:
 	elif ratio > FUEL_LOW_RATIO:
 		_fuel_low = false
 
-func _on_game_over(_won: bool) -> void:
+func _on_game_over(won: bool) -> void:
 	_thrust.stop()
+	if won:
+		_win.play()
+	else:
+		_game_over.play()

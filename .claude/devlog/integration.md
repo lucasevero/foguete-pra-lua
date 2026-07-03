@@ -5,6 +5,11 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — SFX de estados/UI integrados
+- win (`game_over(true)`), game_over (`game_over(false)`), ui_click (botão REINICIAR via `AudioManager.play_ui_click()` chamado em `ui.gd`). Todos 8-bit gerados.
+- `phone_ring.wav` adicionado em assets/audio/sfx/ mas NÃO plugado — é da cutscene (área Dev D). Deixado pro dono da cutscene tocar (evita conflito na área ativa dele).
+- Sem mudança de contrato (usa `game_over` existente; ui_click via chamada direta ao autoload).
+
 ## 2026-07-03 — SFX de gameplay integrados
 - ⚠️ CONTRATO: +2 signals `lifted_off`, `landed_safely` (Player → AudioManager). CONTRACT.md + game_events.gd atualizados.
 - AudioManager conecta todos SFX de gameplay (8-bit, gerados via ffmpeg/python): liftoff, fuel_pickup, crash_asteroid (alto), crash_ground (explosão longa), land_soft, fuel_low (alarme).

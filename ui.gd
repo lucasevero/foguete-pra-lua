@@ -36,5 +36,6 @@ func _on_game_over(won: bool) -> void:
 	restart_button.show()
 
 func _on_restart_pressed() -> void:
+	AudioManager.play_ui_click()
 	get_tree().paused = false            # despausa antes de recarregar
 	get_tree().reload_current_scene()
