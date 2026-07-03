@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qi35tgi1a4mq"
-path="res://.godot/imported/moon_sit.png-bea1b450943039373a5fed0fccc958fc.ctex"
+uid="uid://4236lmlyubg5"
+path="res://.godot/imported/cena_final1.png-bc9a1dbf1b2a6f809dcfeceae74cfeff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/cutscenes/moon_sit.png"
-dest_files=["res://.godot/imported/moon_sit.png-bea1b450943039373a5fed0fccc958fc.ctex"]
+source_file="res://assets/cutscenes/cena_final1.png"
+dest_files=["res://.godot/imported/cena_final1.png-bc9a1dbf1b2a6f809dcfeceae74cfeff.ctex"]
 
 [params]
 

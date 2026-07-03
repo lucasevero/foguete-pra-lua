@@ -36,6 +36,20 @@ func _ready() -> void:
 	get_tree().paused = true            # congela tudo; a UI mostra o menu por cima
 	if _has_started_once:
 		_begin()                        # REINICIAR: joga direto (sem cutscene)
+	_add_debug_final_button()           # DEBUG: testar a CENA 2 sem jogar
+
+func _add_debug_final_button() -> void:
+	# DEBUG (temporário): botão que toca a CENA 2 direto, pra testar sem jogar a partida.
+	var cl := CanvasLayer.new()
+	cl.layer = 200
+	cl.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(cl)
+	var b := Button.new()
+	b.text = "testar final"
+	b.position = Vector2(16, 16)
+	b.process_mode = Node.PROCESS_MODE_ALWAYS
+	b.pressed.connect(_play_final_cutscene)
+	cl.add_child(b)
 
 func _on_start_requested() -> void:    # Menu "JOGAR"
 	_has_started_once = true

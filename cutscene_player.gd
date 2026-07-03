@@ -32,6 +32,7 @@ var _tween: Tween
 
 @onready var _bg: ColorRect = $Background
 @onready var _bg_art: TextureRect = $BackgroundArt
+@onready var _scene_art: TextureRect = $SceneArt
 @onready var _scene: Control = $Scene
 @onready var _top_panel: Panel = $Scene/TopPanel
 @onready var _location: Label = $Scene/TopPanel/LocationLabel
@@ -87,11 +88,16 @@ func _next() -> void:
 
 func _show_beat(beat: CutsceneBeat) -> void:
 	_bg.color = beat.background_color        # cor de fallback do ambiente
-	if beat.background != null:               # textura do ambiente (ex.: LUA)
+	if beat.background != null:               # textura do ambiente (ex.: LUA, espaço)
 		_bg_art.texture = beat.background
 		_bg_art.visible = true
 	else:
 		_bg_art.visible = false
+	if beat.scene_art != null:                # ilustração por cima do fundo (ex.: cena final)
+		_scene_art.texture = beat.scene_art
+		_scene_art.visible = true
+	else:
+		_scene_art.visible = false
 	if beat.sfx != null:
 		_audio.stream = beat.sfx
 		_audio.play()

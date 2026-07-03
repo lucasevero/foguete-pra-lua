@@ -14,6 +14,7 @@ enum PortraitSide { LEFT, RIGHT }
 @export var portrait_side: PortraitSide = PortraitSide.LEFT
 @export var background: Texture2D                     # null = usa background_color
 @export var background_color: Color = Color.BLACK     # fallback quando não há textura
+@export var scene_art: Texture2D                     # ilustração POR CIMA do fundo (ex.: cena final) — null = nenhuma
 @export var sfx: AudioStream                          # som opcional do beat
 @export var auto_advance_after: float = 0.0           # 0 = espera input; >0 = auto após N s
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8r5ady8krpu3"
-path="res://.godot/imported/moon_surface.png-a1504dc021cc118d75337fc22d80844f.ctex"
+uid="uid://dmexbwh1rk6jc"
+path="res://.godot/imported/space_bg.png-5453e201ccfa2398f90b23f4aa1258d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/cutscenes/moon_surface.png"
-dest_files=["res://.godot/imported/moon_surface.png-a1504dc021cc118d75337fc22d80844f.ctex"]
+source_file="res://assets/cutscenes/space_bg.png"
+dest_files=["res://.godot/imported/space_bg.png-5453e201ccfa2398f90b23f4aa1258d2.ctex"]
 
 [params]
 
