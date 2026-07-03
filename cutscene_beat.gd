@@ -9,6 +9,7 @@ enum PortraitSide { LEFT, RIGHT }
 @export var kind: Kind = Kind.DIALOGUE
 @export var speaker: String = ""
 @export_multiline var text: String = ""
+@export var location: String = ""                    # ambiente do falante (rótulo placeholder / cena futura)
 @export var portrait: Texture2D                      # null = placeholder colorido
 @export var portrait_side: PortraitSide = PortraitSide.LEFT
 @export var background: Texture2D                     # null = usa background_color
@@ -18,11 +19,13 @@ enum PortraitSide { LEFT, RIGHT }
 
 static func make(p_kind: Kind, p_speaker: String, p_text: String,
 		p_side: PortraitSide = PortraitSide.LEFT,
-		p_bg: Color = Color.BLACK) -> CutsceneBeat:
+		p_bg: Color = Color.BLACK,
+		p_location: String = "") -> CutsceneBeat:
 	var b := CutsceneBeat.new()
 	b.kind = p_kind
 	b.speaker = p_speaker
 	b.text = p_text
 	b.portrait_side = p_side
 	b.background_color = p_bg
+	b.location = p_location
 	return b

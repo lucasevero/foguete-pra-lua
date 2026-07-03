@@ -7,8 +7,8 @@ func _initialize() -> void:
 
 	var scene: PackedScene = load("res://cutscene_player.tscn")
 
-	var d1 := CutsceneBeat.make(CutsceneBeat.Kind.DIALOGUE, "CARLOS", "oi")
-	var d2 := CutsceneBeat.make(CutsceneBeat.Kind.DIALOGUE, "VOCÊ", "tchau", CutsceneBeat.PortraitSide.RIGHT)
+	var d1 := CutsceneBeat.make(CutsceneBeat.Kind.DIALOGUE, "CARLOS", "oi", CutsceneBeat.PortraitSide.LEFT, Color.BLACK, "LUA")
+	var d2 := CutsceneBeat.make(CutsceneBeat.Kind.DIALOGUE, "VOCÊ", "tchau", CutsceneBeat.PortraitSide.RIGHT, Color.BLACK, "TERRA")
 	var beats: Array[CutsceneBeat] = [d1, d2]
 
 	# 1) DIALOGUE: dirige advance() até finalizar
@@ -60,7 +60,7 @@ func _initialize() -> void:
 	var done4 := {"v": false}
 	player4.finished.connect(func(): done4["v"] = true)
 	player4.play(beats)
-	(player4.get_node("CallUI/SkipButton") as Button).pressed.emit()
+	(player4.get_node("Scene/SkipButton") as Button).pressed.emit()
 	ok = _check(done4["v"], "SkipButton deveria disparar skip()->finished") and ok
 
 	# 5) AnswerButton.pressed -> advance() a partir do CALL, depois dirige até o fim
@@ -70,7 +70,7 @@ func _initialize() -> void:
 	var done5 := {"v": false}
 	player5.finished.connect(func(): done5["v"] = true)
 	player5.play(caption_beats)
-	(player5.get_node("CallUI/AnswerButton") as Button).pressed.emit()
+	(player5.get_node("Scene/AnswerButton") as Button).pressed.emit()
 	var guard5 := 0
 	while not done5["v"] and guard5 < 20:
 		player5.advance()
