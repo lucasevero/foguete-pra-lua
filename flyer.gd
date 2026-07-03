@@ -11,7 +11,7 @@ func _ready() -> void:
 	# vira o sprite pro lado do movimento (velocity setada no spawn, antes do add_child)
 	var spr := get_node_or_null("Sprite")
 	if spr != null and "flip_h" in spr:
-		spr.flip_h = velocity.x < 0.0
+		spr.flip_h = velocity.x > 0.0   # sprites apontam p/ esquerda nativamente; flip ao ir p/ direita
 
 func _physics_process(delta: float) -> void:
 	position += velocity * delta
