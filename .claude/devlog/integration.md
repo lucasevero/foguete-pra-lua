@@ -29,6 +29,56 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 - Thrust wav importado com loop_mode=1 (forward).
 - TODO: conectar SFX de pickup/crash/vitória/game over quando os arquivos chegarem (ver Notion "Sons a Produzir").
 
+## 2026-07-03 — cutscene cross-cut (corta pro ambiente de quem fala)
+
+A cutscene de abertura virou **cross-cut**: em vez de uma única tela de
+chamada, cada fala agora corta, em tela cheia, pro **ambiente de quem está
+falando** — Carlos/Gus falam de **LUA**, Você fala da **TERRA — seu quarto**
+(São Paulo). O beat 0 continua sendo "recebendo chamada" (nome de quem liga +
+botão **Atender**, tocar em qualquer lugar também atende), e a cutscene
+termina do mesmo jeito, com a legenda final centralizada sobre fundo azul
+antes de entrar no `main.tscn`.
+
+**O que mudou:**
+- `CutsceneBeat` (`cutscene_beat.gd`) ganhou um campo **`location`**.
+- `cutscene_intro.gd` define o `location` de cada beat da sequência (LUA para
+  Carlos/Gus, TERRA/quarto para Você) — cores placeholder por ambiente (MOON,
+  ROOM, SKY) substituem os retratos esq/dir do redesign anterior.
+- `cutscene_player.gd`/`cutscene_player.tscn` foram adaptados para desenhar o
+  ambiente em tela cheia por beat, com rótulo do local, em vez do layout de
+  chamada com avatar único trocando de lado.
+- O **timer de duração da chamada** (contagem visível introduzida no redesign
+  portrait anterior) foi **removido** — não fazia sentido com o corte de
+  ambiente cheio.
+- Arquivos tocados: só `cutscene_beat.gd`, `cutscene_intro.gd`,
+  `cutscene_player.gd`, `cutscene_player.tscn` + os dois testes
+  (`tests/test_cutscene_data.gd`, `tests/test_cutscene_player.gd`).
+  `intro.gd`/`intro.tscn` e o contrato `GameEvents`/`CONTRACT.md`
+  **inalterados** — a cutscene continua isolada, sem emitir/escutar signals
+  do jogo.
+
+**Verificação headless (suíte completa, todas passaram):**
+1. `--headless --import --quit` → grep de erro/parse vazio.
+2. `--headless --script res://tests/test_cutscene_data.gd` → `TEST_OK`.
+3. `--headless --script res://tests/test_cutscene_player.gd` → `TEST_OK`.
+4. `--headless res://intro.tscn --quit-after 120` → grep
+   `SCRIPT ERROR|nil|invalid` vazio.
+5. `--headless res://main.tscn --quit-after 120` → grep vazio.
+
+**Pendente: playtest/validação no editor (F5) — PENDENTE**, requer um humano
+interativo (toque/mouse/teclado + display); headless não roda isso. Lição já
+registrada neste devlog continua valendo: um `.tscn` corrompido passa no
+headless mas derruba o editor — validação no editor é obrigatória antes do
+merge. Checklist F5:
+- Recebe chamada ("CARLOS") com botão Atender; tocar em qualquer lugar também
+  atende.
+- Cada fala corta pro ambiente do falante: LUA (Carlos/Gus) e TERRA/quarto
+  (Você), com rótulo do local + avatar + legenda com efeito typewriter.
+- Botão Pular encerra a cutscene a qualquer momento.
+- Legenda final "Missão de resgate iniciada." (fundo azul) → entra no
+  `main.tscn`.
+- Layout cabe bem em 720×1280 (nada cortado).
+
 ## 2026-07-03 — Chão sólido + fase maior
 - Adicionado `Ground` (StaticBody2D + WorldBoundaryShape2D) em main.tscn, y=974 → foguete não passa do chão, começa pousado.
 - Fase maior: `moon_altitude_offset` -5000→-10000; `time_limit` 120→180s.
