@@ -8,6 +8,10 @@ var velocity: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	# vira o sprite pro lado do movimento (velocity setada no spawn, antes do add_child)
+	var spr := get_node_or_null("Sprite")
+	if spr != null and "flip_h" in spr:
+		spr.flip_h = velocity.x < 0.0
 
 func _physics_process(delta: float) -> void:
 	position += velocity * delta

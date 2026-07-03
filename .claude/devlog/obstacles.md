@@ -5,6 +5,10 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Sprites reais dos voadores (pombo animado, zepelim)
+- Pombo: AnimatedSprite2D (passaro1/2/3, loop 8fps), scale 0.7, hitbox capsula 13x38. Zepelim: aviao.png (dirigível capim), scale 1.3, hitbox capsula 22x108. Ambos horizontais (CollisionShape rot 90°).
+- flyer.gd: `flip_h` do $Sprite conforme velocity.x (vira pro lado do movimento).
+
 ## 2026-07-03 — Obstáculos de baixa altitude: pombos + zepelins
 - `flyer.gd` (Area2D genérico, `velocity` setada no spawn; emite `asteroid_hit`; grupo "asteroid" p/ arma destruir). pigeon.tscn (capsula pequena horizontal) e zeppelin.tscn (capsula longa horizontal) — hitboxes no formato; placeholders ColorRect (aguardando sprites reais).
 - `low_obstacle_spawner.gd`: só spawna com céu claro (`ratio < active_max_ratio`=0.30, casa com dark_start_ratio do asteroid_spawner). Pombos diagonal lentos (spawn no topo), zepelins horizontal mais rápidos (spawn nas laterais). Por tempo. Escuta altitude_changed/game_started. Sem mudança de contrato.
