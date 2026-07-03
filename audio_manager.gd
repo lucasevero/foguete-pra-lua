@@ -15,6 +15,8 @@ const SFX_ALARM := preload("res://assets/audio/sfx/fuel_low.wav")
 const SFX_WIN := preload("res://assets/audio/sfx/win.wav")
 const SFX_GAME_OVER := preload("res://assets/audio/sfx/game_over.wav")
 const SFX_UI_CLICK := preload("res://assets/audio/sfx/ui_click.wav")
+const SFX_COIN := preload("res://assets/audio/sfx/coin.wav")
+const SFX_COIN_BIG := preload("res://assets/audio/sfx/coin_big.wav")
 # phone_ring.wav existe em assets/audio/sfx/ — a ser tocado pela cutscene (área Dev D)
 
 const MUSIC_START := 10.0   # a faixa começa/reinicia aos 10s
@@ -31,6 +33,8 @@ var _alarm: AudioStreamPlayer
 var _win: AudioStreamPlayer
 var _game_over: AudioStreamPlayer
 var _ui_click: AudioStreamPlayer
+var _coin: AudioStreamPlayer
+var _coin_big: AudioStreamPlayer
 
 var _fuel_low: bool = false
 var _skip_ground_crash: bool = false   # evita som duplo quando morre por asteroide
@@ -60,6 +64,8 @@ func _ready() -> void:
 	_win = _make(SFX_WIN, -2.0)
 	_game_over = _make(SFX_GAME_OVER, -2.0)
 	_ui_click = _make(SFX_UI_CLICK, -4.0)
+	_coin = _make(SFX_COIN, -4.0)
+	_coin_big = _make(SFX_COIN_BIG, -3.0)
 
 	# O autoload persiste entre reloads da cena; a música só reinicia quando o
 	# GameManager (re)emite game_started — inclusive no REINICIAR (reload_current_scene).
@@ -73,6 +79,13 @@ func _ready() -> void:
 	GameEvents.player_died.connect(_on_player_died)
 	GameEvents.fuel_changed.connect(_on_fuel_changed)
 	GameEvents.game_over.connect(_on_game_over)
+	GameEvents.coin_collected.connect(_on_coin_collected)
+
+func _on_coin_collected(amount: int) -> void:
+	if amount >= 5:
+		_coin_big.play()
+	else:
+		_coin.play()
 
 ## Toca o clique de UI. Chamado por botões (ex: REINICIAR) — AudioManager é serviço global.
 func play_ui_click() -> void:

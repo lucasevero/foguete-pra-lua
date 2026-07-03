@@ -2,6 +2,8 @@ extends Node2D
 ## DONO: Dev C — gera moedas POR DISTÂNCIA de subida (mais frequentes que combustível).
 
 @export var coin_scene: PackedScene
+@export var big_coin_scene: PackedScene       # moeda grande = 5, rara
+@export var big_coin_chance: float = 0.12
 @export var spawn_distance: float = 160.0
 @export var distance_jitter: float = 0.4
 @export var spawn_margin: float = 60.0
@@ -27,6 +29,9 @@ func _spawn() -> void:
 	var screen_size := vp.get_visible_rect().size
 	var to_world := vp.get_canvas_transform().affine_inverse()
 	var sx := randf() * screen_size.x
-	var c := coin_scene.instantiate()
+	var scene := coin_scene
+	if big_coin_scene != null and randf() < big_coin_chance:
+		scene = big_coin_scene
+	var c := scene.instantiate()
 	add_child(c)
 	c.global_position = to_world * Vector2(sx, -spawn_margin)

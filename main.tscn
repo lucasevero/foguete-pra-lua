@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://coin_spawner.gd" id="9"]
 [ext_resource type="PackedScene" path="res://coin.tscn" id="10"]
 [ext_resource type="PackedScene" path="res://shop.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://big_coin.tscn" id="12"]
 
 [sub_resource type="WorldBoundaryShape2D" id="floor"]
 
@@ -38,6 +39,7 @@ fuel_scene = ExtResource("6")
 [node name="CoinSpawner" type="Node2D" parent="."]
 script = ExtResource("9")
 coin_scene = ExtResource("10")
+big_coin_scene = ExtResource("12")
 
 [node name="UI" parent="." instance=ExtResource("7")]
 

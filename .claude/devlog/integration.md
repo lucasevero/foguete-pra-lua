@@ -5,6 +5,9 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Som de moeda (normal/grande)
+- AudioManager conecta `coin_collected(amount)`: coin.wav (normal) / coin_big.wav (amount>=5). Sons 8-bit gerados.
+
 ## 2026-07-03 — Moedas + Loja de powerups
 - ⚠️ CONTRATO (novos): `coin_collected`, `coins_changed`, `powerup_purchase_requested`, `powerup_activated`. CONTRACT.md atualizado.
 - `shop.gd`/`shop.tscn` (CanvasLayer process_mode=ALWAYS, cena NOVA p/ não conflitar com ui.tscn do Dev D): contador de moedas (canto sup. dir.) + botão LOJA (canto inf. dir.) que pausa e abre painel com 4 powerups. Botões desabilitam se não tem moeda.
