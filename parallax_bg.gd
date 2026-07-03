@@ -10,8 +10,8 @@ const CLOUD_TEX := preload("res://assets/sprites/background/bg_clouds.png")
 
 @export var earth_sky: Color = Color(0.53, 0.81, 0.92)
 @export var deep_space: Color = Color(0.02, 0.02, 0.08)
-@export var ground_y: float = 950.0    # chão/cidade no início (casar com player start ~950)
-@export var moon_y: float = -9050.0    # deve casar com moon de game_manager (start 950 + offset -10000)
+@export var ground_y: float = 1150.0   # chão/cidade no início: baixado p/ a imagem encher até a base da tela (casar com player start)
+@export var moon_y: float = -8850.0    # deve casar com moon de game_manager (start 1150 + offset -10000)
 @export var cloud_count: int = 16      # nuvens pequenas espalhadas pela zona baixa
 
 @onready var sky_rect: ColorRect = $SkyLayer/SkyRect

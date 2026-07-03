@@ -5,6 +5,11 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Cenário desce até a base + foguete no chão
+- `main.tscn`: `Ground` 974→1174 e `Player` 950→1150 (descidos ~200px). Fecha a faixa azul vazia embaixo (onde fica o botão LOJA) e deixa o foguete pisando na grama.
+- Coordenado com pickups: `parallax_bg.gd` `ground_y` 950→1150 (city enche até a base ~1290) e `moon_y` -9050→-8850 (alinha com o novo start + offset -10000). Ver devlog de pickups.
+- Validado: player assenta em y=1150 (chão 1174); captura mostra o quintal preenchendo até embaixo, foguete na grama.
+
 ## 2026-07-03 — Painéis do HUD/menu transparentes
 - `ui.tscn`: HudPanel, TiltPanel, MenuPanel e CreditsPanel com `self_modulate` alpha 0 (some a caixa navy, mantém o conteúdo). Pedido: os "blocos com fundo azul" deviam ficar transparentes.
 - Legibilidade: contorno escuro (`font_outline`) nos textos do HUD (FuelValue, CoinLabel, TimeLabel, TiltCaption, ResultLabel), já que ficam sobre o céu claro sem a caixa. Menu fica sobre o Dim, então dispensa.

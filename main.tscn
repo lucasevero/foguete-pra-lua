@@ -23,13 +23,13 @@
 [node name="Background" parent="." instance=ExtResource("1")]
 
 [node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2(0, 974)
+position = Vector2(0, 1174)
 
 [node name="GroundCollision" type="CollisionShape2D" parent="Ground"]
 shape = SubResource("floor")
 
 [node name="Player" parent="." instance=ExtResource("2")]
-position = Vector2(360, 950)
+position = Vector2(360, 1150)
 
 [node name="AsteroidSpawner" type="Node2D" parent="."]
 script = ExtResource("3")

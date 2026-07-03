@@ -5,6 +5,11 @@ Só o agente desta área escreve aqui. Entradas mais recentes no topo. Formato: 
 
 ---
 
+## 2026-07-03 — Cenário (city) desce p/ encher a base da tela
+- (ajustado pela integração a pedido do humano, junto com `main.tscn`.)
+- `parallax_bg.gd`: `ground_y` 950→1150 (a `City` passa a ocupar ~y[1010,1290], enchendo até a base da tela — some a faixa azul vazia embaixo). `moon_y` -9050→-8850 p/ casar com o novo player start (1150) + offset -10000 do game_manager.
+- Player/Ground em `main.tscn` desceram junto (área integration) → alinhamento foguete↔grama preservado.
+
 ## 2026-07-03 — Nuvens: várias pequenas espalhadas
 - Clouds virou container Node2D; `_spawn_clouds` cria `cloud_count`=16 nuvens em x/y aleatórios na faixa baixa (ground_y-200 até -3200), escala 0.12-0.30, alpha variado. Fade do container por altitude (1-r*2.5). Antes era 1 nuvem centralizada.
 
