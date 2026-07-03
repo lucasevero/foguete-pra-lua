@@ -1,9 +1,10 @@
 class_name CutscenePlayer
 extends CanvasLayer
-## Player de cutscene reutilizável e data-driven — layout cross-cut (mobile/portrait).
-## Mostra o AMBIENTE do falante em tela cheia, cortando por beat. Emite `finished` no fim ou ao pular.
+## Player de cutscene reutilizável e data-driven — cross-cut (mobile/portrait).
+## Mostra o AMBIENTE do falante em tela cheia (fundo por textura), o personagem
+## grande ancorado no rodapé (esquerda/direita conforme o lado) e a fala no topo.
 ## Área: integration. Não conhece gameplay nem GameEvents — é pré-jogo/overlay genérico.
-## Input touch-first: tocar avança; botões Atender/Pular; ui_accept/ui_cancel p/ desktop.
+## Input MOBILE: toque/clique avança; botões Atender/Pular. Sem teclado.
 
 signal finished
 
@@ -11,13 +12,18 @@ signal finished
 @export var beats: Array[CutsceneBeat] = []
 
 const CHARS_PER_SEC := 45.0
-## Cores de placeholder por falante (enquanto não há retrato de arte real).
+## Cores de placeholder por falante (usado só quando não há retrato de arte).
 const SPEAKER_COLORS := {
 	"CARLOS": Color(0.90, 0.45, 0.25),
 	"GUS": Color(0.35, 0.70, 0.45),
-	"VOCÊ": Color(0.45, 0.55, 0.90),
+	"LUCA": Color(0.45, 0.55, 0.90),
 }
 const DEFAULT_SPEAKER_COLOR := Color(0.5, 0.5, 0.5)
+
+## Enquadramento do personagem (grande, ancorado no rodapé; corte na perna = borda).
+const AV_SIZE := 640      # largura/altura do quadro do personagem
+const AV_DROP := 40       # quanto o quadro passa da borda inferior
+const AV_OVER := 40       # transbordo lateral (personagem encosta na borda)
 
 var _beats: Array[CutsceneBeat] = []
 var _index: int = -1
@@ -25,14 +31,15 @@ var _typing: bool = false
 var _tween: Tween
 
 @onready var _bg: ColorRect = $Background
+@onready var _bg_art: TextureRect = $BackgroundArt
 @onready var _scene: Control = $Scene
-@onready var _location: Label = $Scene/LocationLabel
+@onready var _top_panel: Panel = $Scene/TopPanel
+@onready var _location: Label = $Scene/TopPanel/LocationLabel
+@onready var _speaker: Label = $Scene/TopPanel/SpeakerName
+@onready var _subtitle: RichTextLabel = $Scene/TopPanel/SubtitleText
 @onready var _avatar: Panel = $Scene/Avatar
 @onready var _avatar_initial: Label = $Scene/Avatar/Initial
 @onready var _avatar_art: TextureRect = $Scene/Avatar/Art
-@onready var _subtitle_box: Panel = $Scene/SubtitleBox
-@onready var _speaker: Label = $Scene/SubtitleBox/SpeakerName
-@onready var _subtitle: RichTextLabel = $Scene/SubtitleBox/SubtitleText
 @onready var _answer_button: Button = $Scene/AnswerButton
 @onready var _skip_button: Button = $Scene/SkipButton
 @onready var _caption: Label = $Caption
@@ -62,10 +69,11 @@ func skip() -> void:
 	finished.emit()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		skip()
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("ui_accept") or (event is InputEventMouseButton and event.pressed):
+	# Mobile: toque/clique avança. O toque emula mouse (emulate_mouse_from_touch,
+	# ligado por padrão — mesma convenção do player.gd), então basta o MouseButton
+	# (tratar ScreenTouch junto dispararia 2x por toque). Os Control não-botão têm
+	# mouse_filter=IGNORE no .tscn pra o evento chegar aqui; os botões capturam o seu.
+	if event is InputEventMouseButton and event.pressed:
 		advance()
 		get_viewport().set_input_as_handled()
 
@@ -78,7 +86,12 @@ func _next() -> void:
 	_show_beat(_beats[_index])
 
 func _show_beat(beat: CutsceneBeat) -> void:
-	_bg.color = beat.background_color   # placeholder do ambiente; textura real entra via slot
+	_bg.color = beat.background_color        # cor de fallback do ambiente
+	if beat.background != null:               # textura do ambiente (ex.: LUA)
+		_bg_art.texture = beat.background
+		_bg_art.visible = true
+	else:
+		_bg_art.visible = false
 	if beat.sfx != null:
 		_audio.stream = beat.sfx
 		_audio.play()
@@ -92,24 +105,29 @@ func _show_beat(beat: CutsceneBeat) -> void:
 	_arm_auto_advance(beat)
 
 func _show_call(beat: CutsceneBeat) -> void:
-	# Beat 0: tela "recebendo chamada" (estruturada a partir de beat.speaker).
+	# Tela "Carlos chamando" — sem imagem do personagem, só o texto + Atender.
 	_scene.visible = true
 	_caption.visible = false
-	_location.text = "recebendo chamada"
-	_speaker.text = beat.speaker
-	_subtitle_box.visible = false
+	_top_panel.visible = true
+	_location.visible = false
+	_speaker.visible = true
+	_speaker.text = beat.text                 # "Carlos chamando"
+	_subtitle.visible = false
+	_avatar.visible = false
 	_answer_button.visible = true
 	_skip_button.visible = true
-	_set_avatar(beat)
 	_typing = false
 
 func _show_dialogue(beat: CutsceneBeat) -> void:
-	# Cross-cut: mostra o ambiente do falante (beat.location) em tela cheia.
+	# Cross-cut: ambiente + personagem grande no rodapé + fala no topo.
 	_scene.visible = true
 	_caption.visible = false
-	_location.text = beat.location
+	_top_panel.visible = true
+	_location.visible = false
+	_speaker.visible = true
 	_speaker.text = beat.speaker
-	_subtitle_box.visible = true
+	_subtitle.visible = true
+	_avatar.visible = true
 	_answer_button.visible = false
 	_skip_button.visible = true
 	_set_avatar(beat)
@@ -126,11 +144,28 @@ func _show_caption(beat: CutsceneBeat) -> void:
 	_tween.tween_property(_caption, "modulate:a", 1.0, 0.6)
 
 func _set_avatar(beat: CutsceneBeat) -> void:
+	# Posiciona o personagem grande no rodapé, no lado indicado por portrait_side.
+	var on_right := beat.portrait_side == CutsceneBeat.PortraitSide.RIGHT
+	_avatar.anchor_top = 1.0
+	_avatar.anchor_bottom = 1.0
+	_avatar.offset_top = -AV_SIZE
+	_avatar.offset_bottom = AV_DROP
+	if on_right:
+		_avatar.anchor_left = 1.0
+		_avatar.anchor_right = 1.0
+		_avatar.offset_left = -AV_SIZE + AV_OVER
+		_avatar.offset_right = AV_OVER
+	else:
+		_avatar.anchor_left = 0.0
+		_avatar.anchor_right = 0.0
+		_avatar.offset_left = -AV_OVER
+		_avatar.offset_right = AV_SIZE - AV_OVER
+	# textura vs placeholder
 	if beat.portrait != null:
 		_avatar_art.texture = beat.portrait
 		_avatar_art.visible = true
 		_avatar_initial.visible = false
-		_avatar.self_modulate = Color(1, 1, 1, 0)   # esconde a caixa placeholder; mostra só o sprite transparente
+		_avatar.self_modulate = Color(1, 1, 1, 0)   # esconde a caixa; só o sprite transparente
 	else:
 		_avatar_art.visible = false
 		_avatar_initial.visible = true
