@@ -24,6 +24,8 @@ extends CharacterBody2D
 @export var fire_interval: float = 0.15      # intervalo entre tiros
 
 const BULLET := preload("res://bullet.tscn")
+const ROCKET_IDLE := preload("res://assets/sprites/player/rocket_idle.png")
+const ROCKET_FLAME := preload("res://assets/sprites/player/rocket_flame.png")
 
 var fuel: float
 var angular_velocity: float = 0.0
@@ -34,6 +36,7 @@ var _weapon_time: float = 0.0
 var _fire_cd: float = 0.0
 
 @onready var _shield_sprite: Sprite2D = $Shield
+@onready var _rocket: Sprite2D = $Rocket
 
 func _ready() -> void:
 	fuel = max_fuel
@@ -70,6 +73,7 @@ func _physics_process(delta: float) -> void:
 	if thrusting != _thrusting:
 		_thrusting = thrusting
 		GameEvents.thrust_changed.emit(thrusting)   # AudioManager liga/desliga o motor
+		_rocket.texture = ROCKET_FLAME if thrusting else ROCKET_IDLE
 	if thrusting:
 		var vp := get_viewport()
 		var center := vp.get_visible_rect().size * 0.5

@@ -5,6 +5,9 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Sprite do foguete (pixel art)
+- Player usa `rocket_idle.png`; troca pra `rocket_flame.png` enquanto empurra (na virada de `_thrusting`). Substituiu os ColorRect placeholder (Sprite + Nose).
+
 ## 2026-07-03 — Escudo com visual (círculo amarelo)
 - Nó `Shield` (Sprite2D, z=1) no player; textura gerada em código (disco amarelo translúcido, placeholder). Mostra ao ativar escudo, esconde ao absorver hit.
 
