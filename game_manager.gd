@@ -35,15 +35,16 @@ func _ready() -> void:
 	running = false
 	get_tree().paused = true            # congela tudo; a UI mostra o menu por cima
 	if _has_started_once:
-		_play_cutscene()                # REINICIAR: cutscene e, ao terminar, joga
+		_begin()                        # REINICIAR: joga direto (sem cutscene)
 
 func _on_start_requested() -> void:    # Menu "JOGAR"
 	_has_started_once = true
 	_play_cutscene()
 
 func _play_cutscene() -> void:
-	# JOGAR (do menu) e REINICIAR tocam a cutscene por cima, com a árvore pausada;
+	# Só o JOGAR toca a cutscene (do menu), por cima e com a árvore pausada;
 	# ao terminar (ou pular), _begin() despausa e começa a partida.
+	# O REINICIAR NÃO passa por aqui (vai direto pro _begin no _ready).
 	GameEvents.cutscene_started.emit()          # UI esconde o menu/HUD enquanto toca
 	var cs: CutscenePlayer = CUTSCENE.instantiate()
 	cs.layer = 100                              # por cima do menu/HUD/loja

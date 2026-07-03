@@ -5,6 +5,11 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Cutscene só no JOGAR (REINICIAR joga direto)
+- `game_manager.gd`: no `_ready`, o ramo `_has_started_once` (caminho do REINICIAR/reload) voltou a chamar `_begin()` em vez de `_play_cutscene()`. Agora só o **JOGAR** (via `_on_start_requested`) toca a cutscene; **REINICIAR** entra direto no jogo.
+- Validado: BOOT=menu, JOGAR→cutscene, recriar cena com flag=true (=REINICIAR)→jogo direto sem cutscene (RESULT_OK).
+- (Revertida a tentativa de arte das moedas — não commitada.)
+
 ## 2026-07-03 — Fix: áudio continuava tocando em background
 - `audio_manager.gd` `_notification`: muta o bus master em NOTIFICATION_APPLICATION_PAUSED / WM_WINDOW_FOCUS_OUT (app em background / tela off / perde foco), desmuta em RESUMED / FOCUS_IN. Resolve música tocando fora do app (web/mobile).
 
