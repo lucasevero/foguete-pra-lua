@@ -5,6 +5,12 @@ Entradas mais recentes no topo. Formato: `## AAAA-MM-DD — título`.
 
 ---
 
+## 2026-07-03 — Meteoros: bastante + todos os tamanhos ao escurecer
+- (ajuste pela integração a pedido do humano: "poucos" → "bastante de todos os tamanhos".)
+- `asteroid_spawner.gd`: `base_interval` 2.2→0.45s (~2.2/s já quando o céu escurece), `min_interval` 0.35→0.2s (~5/s no máximo), `ramp_time` 90→60s.
+- `_pick_variant`: **todos os tamanhos presentes desde o início** (pesos pequeno=1.0, médio=0.9+diff·0.3, grande=0.7+diff·0.9) em vez de só pequenos cedo. Com o tempo pende pros maiores.
+- Mantido o gate por altitude (nada no céu claro). Validado headless: diff=0 gera os 3 tamanhos; ~6 spawns em ~1s.
+
 ## 2026-07-03 — Sprites reais dos voadores (pombo animado, zepelim)
 - Pombo: AnimatedSprite2D (passaro1/2/3, loop 8fps), scale 0.7, hitbox capsula 13x38. Zepelim: aviao.png (dirigível capim), scale 1.3, hitbox capsula 22x108. Ambos horizontais (CollisionShape rot 90°).
 - flyer.gd: `flip_h` do $Sprite conforme velocity.x (vira pro lado do movimento).

@@ -6,9 +6,9 @@ extends Node2D
 
 @export var asteroid_scene: PackedScene
 @export var dark_start_ratio: float = 0.30   # altitude em que o céu escurece → meteoros começam
-@export var base_interval: float = 2.2       # s entre spawns no começo (poucos)
-@export var min_interval: float = 0.35       # s entre spawns na dificuldade máxima
-@export var ramp_time: float = 90.0          # s (de céu escuro) até a dificuldade ~máxima
+@export var base_interval: float = 0.45      # s entre spawns já quando o céu escurece (bastante meteoro de cara)
+@export var min_interval: float = 0.2        # s entre spawns na dificuldade máxima
+@export var ramp_time: float = 60.0          # s (de céu escuro) até a dificuldade ~máxima
 @export var spawn_margin: float = 60.0       # quão acima do topo da tela nasce
 
 # 3 tamanhos: textura + escala (a colisão escala junto com o nó).
@@ -60,11 +60,11 @@ func _spawn(diff: float) -> void:
 	a.global_position = to_world * Vector2(sx, -spawn_margin)  # acima do topo
 
 func _pick_variant(diff: float) -> Dictionary:
-	# pequeno domina cedo; médio cresce; grande é quadrático (só aparece bem mais tarde).
+	# TODOS os tamanhos já aparecem quando o céu escurece; com o tempo pende pros maiores.
 	var weights := [
-		maxf(0.05, 1.0 - diff * 1.1),   # pequeno
-		0.25 + diff * 0.5,              # médio
-		diff * diff,                    # grande
+		1.0,                    # pequeno (sempre presente)
+		0.9 + diff * 0.3,       # médio
+		0.7 + diff * 0.9,       # grande (já aparece no início, cresce com o tempo)
 	]
 	var total: float = weights[0] + weights[1] + weights[2]
 	var pick := randf() * total
