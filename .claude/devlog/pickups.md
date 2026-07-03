@@ -5,6 +5,10 @@ Só o agente desta área escreve aqui. Entradas mais recentes no topo. Formato: 
 
 ---
 
+## 2026-07-03 — Assets reais: background + galão
+- `bg_city.png` (quintal 1800x700, escala 0.4) no nó City; `bg_moon.png` (300, escala 0.9) no Moon; `bg_clouds.png` novo nó Clouds (baixa altitude, some ao subir: alpha=1-r*3.5). Removidos placeholders procedurais de city/moon (estrelas seguem procedurais até chegar bg_stars).
+- `fuel_can.png` (50x50) no fuel.tscn (era ColorRect); colisão 44x44.
+
 ## 2026-07-03 — Moedas coletáveis (+ moeda grande = 5)
 - `coin.gd`/`coin.tscn` (Area2D dourado) + `coin_spawner.gd` (por distância, ~160px, mais frequente que combustível). Emite `coin_collected(amount)`.
 - `big_coin.tscn` (reusa coin.gd, amount=5, maior, laranja). Spawner: `big_coin_chance`=0.12 (rara). CoinSpawner tem coin_scene + big_coin_scene em main.tscn.
