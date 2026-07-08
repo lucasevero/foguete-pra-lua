@@ -70,6 +70,14 @@ Smoke test headless (rodar ANTES de todo commit — deve sair sem nada):
 /Applications/Godot.app/Contents/MacOS/Godot --headless res://main.tscn --quit-after 120 2>&1 | grep -iE "SCRIPT ERROR|error|nil|invalid"
 ```
 
+## Deploy (jogar no navegador / celular)
+
+Hospedado no **GitHub Pages**: https://lucasevero.github.io/foguete-pra-lua/ (link fixo).
+Qualquer dev com push no repo publica uma nova versão rodando **`./deploy.sh`**
+(exporta Web nothreads → branch `gh-pages`; Pages atualiza em ~1 min). Precisa de
+Godot 4.7 + export templates. Godot fora do caminho padrão: `GODOT=/caminho ./deploy.sh`.
+Export Web é **nothreads** (GitHub Pages não envia headers COOP/COEP).
+
 ## Como trabalhamos (agentes)
 
 - Trabalhe **só na sua área**. Se precisar de algo de outra área, peça via **signal novo no contrato** — não invada o arquivo do outro.
